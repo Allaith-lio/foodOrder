@@ -1,1 +1,157 @@
 @import "tailwindcss";
+
+@theme {
+  /* Colors */
+  --color-primary: #ff5a36;
+  --color-primary-hover: #e04826;
+  --color-primary-text: #ff5a36;
+  
+  --color-secondary: #ffa800;
+  --color-secondary-hover: #e09600;
+  
+  --color-tertiary: #10b981;
+  --color-tertiary-hover: #059669;
+
+  --color-logo-end: #ffa800;
+
+  --color-page: #f8fafc;
+  --color-surface: #ffffff;
+  --color-ink: #1e293b;
+  --color-muted: #64748b;
+  --color-line: #e2e8f0;
+
+  /* Fonts - Plus Jakarta Sans for everything */
+  --font-heading: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-logo: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+
+  /* Typography */
+  --text-h1: clamp(2.25rem, 1.8rem + 2vw, 3.5rem);
+  --text-h1--line-height: 1.1;
+  --text-h2: clamp(1.75rem, 1.5rem + 1.2vw, 2.5rem);
+  --text-h2--line-height: 1.15;
+  --text-h3: 1.375rem;
+  --text-h3--line-height: 1.3;
+
+  /* Radius */
+  --radius-control: 0.75rem;
+  --radius-card: 1rem;
+
+  /* Shadows */
+  --shadow-card: 0 1px 3px rgb(30 41 59 / 0.05), 0 4px 12px rgb(30 41 59 / 0.05);
+  --shadow-raised: 0 4px 6px -1px rgb(30 41 59 / 0.1), 0 10px 25px -5px rgb(30 41 59 / 0.1);
+
+  /* Transitions */
+  --default-transition-duration: 200ms;
+  --default-transition-timing-function: cubic-bezier(0.2, 0, 0, 1);
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --color-secondary: #ffb703;
+  --color-secondary-hover: #ffa200;
+  --color-logo-end: #ffb703;
+
+  --color-page: #0f172a;
+  --color-surface: #1e293b;
+  --color-ink: #f8fafc;
+  --color-muted: #94a3b8;
+  --color-line: #334155;
+
+  --shadow-card: 0 1px 3px rgb(0 0 0 / 0.3), 0 4px 12px rgb(0 0 0 / 0.3);
+  --shadow-raised: 0 4px 12px rgb(0 0 0 / 0.4), 0 12px 28px rgb(0 0 0 / 0.3);
+}
+
+@layer utilities {
+  .logo-gradient {
+    @apply bg-linear-to-r from-primary via-secondary to-logo-end bg-clip-text text-transparent;
+  }
+}
+
+@layer base {
+  body {
+    @apply min-h-dvh bg-page font-body text-ink antialiased;
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply font-heading font-bold tracking-tight;
+  }
+  h1 {
+    @apply text-h1;
+  }
+  h2 {
+    @apply text-h2;
+  }
+  h3 {
+    @apply text-h3;
+  }
+
+  a:not([class]) {
+    @apply text-primary underline underline-offset-4 transition-colors hover:text-primary-hover;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-primary;
+  }
+}
+
+@layer components {
+  .section {
+    @apply py-16 md:py-24;
+  }
+
+  .btn {
+    @apply inline-flex cursor-pointer items-center justify-center gap-2 rounded-control border border-transparent px-5 py-2.5 text-sm font-semibold transition active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50;
+  }
+
+  .btn-primary {
+    @apply bg-primary text-white hover:bg-primary-hover active:brightness-95 transition-colors duration-200;
+  }
+
+  .btn-secondary {
+    @apply bg-secondary text-slate-950 hover:bg-secondary-hover transition-colors duration-200 font-bold;
+  }
+
+  .btn-tertiary {
+    @apply bg-tertiary text-white hover:bg-tertiary-hover transition-colors duration-200;
+  }
+
+  .btn-outline {
+    @apply border-line bg-surface text-ink transition-colors duration-200 hover:border-primary/50 hover:bg-page;
+  }
+
+  .icon-link {
+    @apply flex min-w-14 flex-col items-center gap-1 rounded-control px-2 py-2 text-muted transition-colors duration-200 hover:bg-page hover:text-ink focus-visible:outline-2 focus-visible:outline-primary;
+  }
+
+  [data-theme="dark"] .btn-outline {
+    @apply hover:border-slate-600 hover:bg-slate-800 hover:text-ink;
+  }
+
+  [data-theme="dark"] .icon-link {
+    @apply hover:bg-slate-800 hover:text-ink;
+  }
+  
+  [data-theme="dark"] {
+    --color-primary-text: #ff7a5c;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  opacity: 0;
+  animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
