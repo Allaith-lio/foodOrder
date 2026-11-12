@@ -34,21 +34,19 @@ export default function TopRestaurants() {
         </div>
       </SectionHeading>
 
-      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4 ">
         {visible.map((r) => (
-          <article key={r.id} className="overflow-hidden rounded-card border border-line bg-surface shadow-card">
+          <article key={r.id} className="overflow-hidden rounded-card border border-line bg-surface shadow-card transition hover:-translate-y-1 duration-300">
             <div className="relative">
-              <FoodImage src={r.image} emoji={r.emoji} alt={r.name} className="h-32 w-full" />
+              <FoodImage src={r.image} alt={r.name} className="h-32 w-full" />
               <span className="absolute bottom-2 left-2 rounded bg-black/60 px-2 py-0.5 text-[10px] font-semibold text-white">
                 {r.tag}
               </span>
             </div>
 
             <div className="p-4">
-              <div className="flex items-center justify-between">
-                <h3 className="!text-sm">{r.name}</h3>
-                <span className="text-xs font-semibold text-muted">{r.price}</span>
-              </div>
+              <h3 className="!text-sm">{r.name}</h3>
+              <p className="mt-0.5 text-[11px] text-muted">{r.price}</p>
 
               <div className="mt-2 flex items-center gap-3 text-xs text-muted">
                 <span className="flex items-center gap-1 font-semibold text-ink">
