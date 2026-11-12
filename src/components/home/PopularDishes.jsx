@@ -14,10 +14,10 @@ export default function PopularDishes() {
 
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
         {dishes.map((dish) => (
-          <article key={dish.id} className="rounded-card border border-line bg-surface p-3 shadow-card">
+          <article key={dish.id} className="rounded-card border border-line bg-surface p-3 shadow-card transition hover:-translate-y-1 duration-300">
             <div className="relative">
-              <FoodImage src={dish.image} emoji={dish.emoji} alt={dish.name} className="h-40 w-full rounded-control" />
-              <span className="absolute left-2 top-2 rounded bg-white px-2 py-0.5 text-[10px] font-semibold text-slate-700">
+              <FoodImage src={dish.image} alt={dish.name} className="h-40 w-full rounded-control" />
+              <span className="absolute left-2 top-2 rounded bg-white px-2 py-0.5 text-[10px] font-semibold text-stone-700">
                 {dish.kcal} kcal
               </span>
             </div>
@@ -35,7 +35,7 @@ export default function PopularDishes() {
               <p className="mt-1 line-clamp-2 text-xs text-muted">{dish.text}</p>
 
               <div className="mt-4 flex items-center justify-between">
-                <span className="text-lg font-bold">${dish.price.toFixed(2)}</span>
+                <span className="text-base font-bold">{dish.price.toLocaleString("en-US")} SYP</span>
                 <button className="btn btn-primary !gap-1 !px-3 !py-1.5 !text-xs">
                   <Plus className="size-3.5" /> Add
                 </button>

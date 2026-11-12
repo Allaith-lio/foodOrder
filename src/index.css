@@ -1,26 +1,29 @@
+
 @import "tailwindcss";
 
 @theme {
   /* Colors */
-  --color-primary: #ff5a36;
-  --color-primary-hover: #e04826;
-  --color-primary-text: #ff5a36;
-  
-  --color-secondary: #ffa800;
-  --color-secondary-hover: #e09600;
-  
-  --color-tertiary: #10b981;
-  --color-tertiary-hover: #059669;
+  --color-primary: #EF4444;
+  --color-primary-hover: #DC2626;
+  --color-primary-text: #EF4444;
 
-  --color-logo-end: #ffa800;
+  --color-secondary: #FACC15;
+  --color-secondary-hover: #EAB308;
 
-  --color-page: #f8fafc;
-  --color-surface: #ffffff;
-  --color-ink: #1e293b;
-  --color-muted: #64748b;
-  --color-line: #e2e8f0;
+  --color-tertiary: #16A34A;
+  --color-tertiary-hover: #15803D;
 
-  /* Fonts - Plus Jakarta Sans for everything */
+  /* Logo */
+  --color-logo-end: #DC2626;
+
+  /* Backgrounds & Text */
+  --color-page: #FFFDF5;
+  --color-surface: #FFFFFF;
+  --color-ink: #292524;
+  --color-muted: #78716C;
+  --color-line: #E7E5E4;
+
+  /* Fonts */
   --font-heading: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
   --font-body: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
   --font-logo: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
@@ -38,34 +41,46 @@
   --radius-card: 1rem;
 
   /* Shadows */
-  --shadow-card: 0 1px 3px rgb(30 41 59 / 0.05), 0 4px 12px rgb(30 41 59 / 0.05);
-  --shadow-raised: 0 4px 6px -1px rgb(30 41 59 / 0.1), 0 10px 25px -5px rgb(30 41 59 / 0.1);
+  --shadow-card: 0 1px 3px rgb(41 37 36 / 0.05),
+                 0 4px 12px rgb(41 37 36 / 0.04);
+
+  --shadow-raised: 0 4px 8px -2px rgb(41 37 36 / 0.08),
+                   0 10px 20px -5px rgb(41 37 36 / 0.06);
 
   /* Transitions */
   --default-transition-duration: 200ms;
   --default-transition-timing-function: cubic-bezier(0.2, 0, 0, 1);
 }
 
+/* Dark Mode */
 [data-theme="dark"] {
   color-scheme: dark;
 
-  --color-secondary: #ffb703;
-  --color-secondary-hover: #ffa200;
-  --color-logo-end: #ffb703;
+  --color-primary: #F87171;
+  --color-primary-hover: #EF4444;
+  --color-primary-text: #F87171;
 
-  --color-page: #0f172a;
-  --color-surface: #1e293b;
-  --color-ink: #f8fafc;
-  --color-muted: #94a3b8;
-  --color-line: #334155;
+  --color-secondary: #FACC15;
+  --color-secondary-hover: #EAB308;
+  --color-logo-end: #F87171;
 
-  --shadow-card: 0 1px 3px rgb(0 0 0 / 0.3), 0 4px 12px rgb(0 0 0 / 0.3);
-  --shadow-raised: 0 4px 12px rgb(0 0 0 / 0.4), 0 12px 28px rgb(0 0 0 / 0.3);
+  --color-page: #1C1917;
+  --color-surface: #292524;
+  --color-ink: #FAFAF9;
+  --color-muted: #A8A29E;
+  --color-line: #44403C;
+
+  --shadow-card: 0 1px 3px rgb(0 0 0 / 0.25),
+                 0 4px 12px rgb(0 0 0 / 0.2);
+
+  --shadow-raised: 0 4px 12px rgb(0 0 0 / 0.3),
+                   0 12px 28px rgb(0 0 0 / 0.25);
 }
 
 @layer utilities {
+  /* Simple, clean logo */
   .logo-gradient {
-    @apply bg-linear-to-r from-primary via-secondary to-logo-end bg-clip-text text-transparent;
+    @apply text-primary;
   }
 }
 
@@ -79,12 +94,15 @@
   h3 {
     @apply font-heading font-bold tracking-tight;
   }
+
   h1 {
     @apply text-h1;
   }
+
   h2 {
     @apply text-h2;
   }
+
   h3 {
     @apply text-h3;
   }
@@ -104,39 +122,47 @@
   }
 
   .btn {
-    @apply inline-flex cursor-pointer items-center justify-center gap-2 rounded-control border border-transparent px-5 py-2.5 text-sm font-semibold transition active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50;
+    @apply inline-flex cursor-pointer items-center justify-center gap-2
+    rounded-control border border-transparent px-5 py-2.5
+    text-sm font-semibold transition-colors duration-200
+    active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50;
   }
 
+  /* Main CTA */
   .btn-primary {
-    @apply bg-primary text-white hover:bg-primary-hover active:brightness-95 transition-colors duration-200;
+    @apply bg-primary text-white hover:bg-primary-hover;
   }
 
+  /* Secondary CTA */
   .btn-secondary {
-    @apply bg-secondary text-slate-950 hover:bg-secondary-hover transition-colors duration-200 font-bold;
+    @apply bg-secondary text-stone-900 hover:bg-secondary-hover;
   }
 
+  /* Success / Positive actions */
   .btn-tertiary {
-    @apply bg-tertiary text-white hover:bg-tertiary-hover transition-colors duration-200;
+    @apply bg-tertiary text-white hover:bg-tertiary-hover;
   }
 
+  /* Outline */
   .btn-outline {
-    @apply border-line bg-surface text-ink transition-colors duration-200 hover:border-primary/50 hover:bg-page;
+    @apply border-line bg-surface text-ink
+    hover:border-primary hover:text-primary;
   }
 
   .icon-link {
-    @apply flex min-w-14 flex-col items-center gap-1 rounded-control px-2 py-2 text-muted transition-colors duration-200 hover:bg-page hover:text-ink focus-visible:outline-2 focus-visible:outline-primary;
+    @apply flex min-w-14 flex-col items-center gap-1
+    rounded-control px-2 py-2 text-muted
+    transition-colors duration-200
+    hover:bg-page hover:text-primary;
   }
 
+  /* Dark Mode Components */
   [data-theme="dark"] .btn-outline {
-    @apply hover:border-slate-600 hover:bg-slate-800 hover:text-ink;
+    @apply hover:border-primary hover:bg-stone-800 hover:text-primary;
   }
 
   [data-theme="dark"] .icon-link {
-    @apply hover:bg-slate-800 hover:text-ink;
-  }
-  
-  [data-theme="dark"] {
-    --color-primary-text: #ff7a5c;
+    @apply hover:bg-stone-800 hover:text-primary;
   }
 }
 
@@ -145,6 +171,7 @@
     opacity: 0;
     transform: translateY(40px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -154,4 +181,145 @@
 .animate-fade-in-up {
   opacity: 0;
   animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.taza-map-frame {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: 280px;
+  border: 1px solid #e8e4dc;
+  border-radius: 1.15rem;
+  background: #e8eee8;
+}
+
+.taza-map {
+  z-index: 0;
+  width: 100%;
+  height: 280px;
+  background: #e8eee8;
+}
+
+.taza-map-controls {
+  position: absolute;
+  z-index: 500;
+  top: 0.75rem;
+  right: 0.75rem;
+  display: grid;
+  gap: 0.35rem;
+  padding: 0.3rem;
+  border: 1px solid rgb(255 255 255 / 0.8);
+  border-radius: 0.8rem;
+  background: rgb(255 255 255 / 0.94);
+  box-shadow: 0 4px 16px rgb(30 41 59 / 0.14);
+  backdrop-filter: blur(8px);
+}
+
+.taza-map-controls button {
+  display: grid;
+  width: 2rem;
+  height: 2rem;
+  place-items: center;
+  border: 0;
+  border-radius: 0.55rem;
+  background: transparent;
+  color: #334155;
+  cursor: pointer;
+  transition: background-color 160ms ease, color 160ms ease;
+}
+
+.taza-map-controls button:hover {
+  background: #fff2e9;
+  color: #e65332;
+}
+
+.taza-map .leaflet-control-attribution {
+  margin: 0 0.35rem 0.25rem 0.35rem;
+  border-radius: 0.3rem;
+  background: rgb(255 255 255 / 0.78);
+  font-size: 7px;
+}
+
+.taza-map-pin {
+  border: 0;
+  background: transparent;
+}
+
+.taza-map-pin__outer {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  place-items: center;
+  border: 2px solid rgb(230 83 50 / 0.2);
+  border-radius: 9999px;
+  background: rgb(230 83 50 / 0.14);
+}
+
+.taza-map-pin__inner {
+  width: 15px;
+  height: 15px;
+  border: 3px solid white;
+  border-radius: 9999px;
+  background: #e65332;
+  box-shadow: 0 2px 6px rgb(30 41 59 / 0.3);
+}
+
+.taza-map-label,
+.taza-map-directions {
+  position: absolute;
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  border: 1px solid rgb(255 255 255 / 0.8);
+  background: rgb(255 255 255 / 0.94);
+  box-shadow: 0 4px 16px rgb(30 41 59 / 0.14);
+  backdrop-filter: blur(8px);
+}
+
+.taza-map-label {
+  top: 0.75rem;
+  left: 0.75rem;
+  gap: 0.55rem;
+  border-radius: 0.8rem;
+  padding: 0.4rem 0.7rem 0.4rem 0.4rem;
+}
+
+.taza-map-directions {
+  right: 0.75rem;
+  bottom: 1.5rem;
+  gap: 0.35rem;
+  border-radius: 9999px;
+  padding: 0.5rem 0.75rem;
+  color: #334155;
+  font-size: 10px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: color 160ms ease, transform 160ms ease;
+}
+
+.taza-map-directions:hover {
+  transform: translateY(-1px);
+  color: #e65332;
+}
+
+.taza-map .leaflet-popup-content-wrapper {
+  border-radius: 0.8rem;
+  box-shadow: 0 5px 18px rgb(30 41 59 / 0.18);
+}
+
+.taza-map .leaflet-popup-content {
+  margin: 0.7rem 0.9rem;
+  font-family: var(--font-body);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+@media (max-width: 640px) {
+  .taza-map-frame {
+    min-height: 250px;
+  }
+
+  .taza-map {
+    height: 250px;
+  }
 }
