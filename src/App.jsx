@@ -5,6 +5,10 @@ import LoginAndRegister from "./pages/LoginAndRegister";
 import ResturantsDetalies from "./pages/ResturantsDetalies";
 import Resturants from "./Pages/Resturants";
 import Wishlist from "./Pages/Wishlist";
+import VendorLayout from "./components/vendor/VendorLayout";
+import Dashboard from "./pages/vendor/Dashboard";
+import OrdersManagement from "./pages/vendor/OrdersManagement";
+import CustomersManagement from "./pages/vendor/CustomersManagement";
 
 export default function App() {
   return (
@@ -17,6 +21,12 @@ export default function App() {
         <Route index element={<Home />} />
         <Route path="/restaurants/taza-041" element={<ResturantsDetalies />} />
         {/* teammates add their pages here */}
+      </Route>
+      {/* Vendor area (sidebar layout) - Nour */}
+      <Route path="/vendor" element={<VendorLayout />}>
+        <Route index element={<Dashboard />} />
+        <Route path="orders" element={<OrdersManagement />} />
+        <Route path="customers" element={<CustomersManagement />} />
       </Route>
     </Routes>
   );
