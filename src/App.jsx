@@ -9,7 +9,8 @@ import VendorLayout from "./components/vendor/VendorLayout";
 import Dashboard from "./pages/vendor/Dashboard";
 import OrdersManagement from "./pages/vendor/OrdersManagement";
 import CustomersManagement from "./pages/vendor/CustomersManagement";
-
+import MyOrders from "./pages/MyOrders";
+import Cart from "./pages/Cart";
 export default function App() {
   return (
     <Routes>
@@ -20,6 +21,8 @@ export default function App() {
       <Route element={<Layout />}>
         <Route index element={<Home />} />
         <Route path="/restaurants/taza-041" element={<ResturantsDetalies />} />
+        <Route path="/orders" element={<MyOrders />} />
+        <Route path="/cart" element={<Cart />} />
         {/* teammates add their pages here */}
       </Route>
       {/* Vendor area (sidebar layout) - Nour */}
