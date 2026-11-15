@@ -1,255 +1,152 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
-    ArrowUp,
-    Check,
-    ChevronLeft,
-    ChevronRight,
-    Search,
-    MapPin,
-    Star,
-    Utensils,
-    X,
-} from "lucide-react";
-import ResturantCard from "../components/ResturantCard.jsx";
+	ArrowUp,
+	Check,
+	ChevronLeft,
+	ChevronRight,
+	Search,
+	MapPin,
+	Star,
+	Utensils,
+	X,
+} from 'lucide-react';
+import RestaurantCard from '../components/common/RestaurantsCard';
+import { restaurants } from '../data/restaurantsData';
+import { useNavigate } from 'react-router-dom';
+import { useWishlist } from '../hooks/WishlistContext';
 
-export const restaurants = [
-    {
-        id: 1,
-        name: "Burger House",
-        cuisine: "Fast Food",
-        location: "Downtown",
-        rating: 4.8,
-        deliveryFee: 0,
-        deliveryTime: "20 - 30 min",
-        image: "https://images.unsplash.com/photo-1550547660-d9450f859349?w=900&q=85",
-    },
-    {
-        id: 2,
-        name: "Roma Pizza",
-        cuisine: "Italian",
-        location: "Al-Rawda",
-        rating: 4.6,
-        deliveryFee: 2.5,
-        deliveryTime: "30 - 45 min",
-        image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=900&q=85",
-    },
-    {
-        id: 3,
-        name: "Sushi Master",
-        cuisine: "Asian",
-        location: "District 7",
-        rating: 4.9,
-        deliveryFee: 3.0,
-        deliveryTime: "35 - 50 min",
-        image: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=900&q=85",
-    },
-    {
-        id: 4,
-        name: "Shawarma Zaman",
-        cuisine: "Middle Eastern",
-        location: "Downtown",
-        rating: 4.5,
-        deliveryFee: 1.0,
-        deliveryTime: "15 - 25 min",
-        image: "https://images.unsplash.com/photo-1529006557810-274b9b2fc783?w=900&q=85",
-    },
-    {
-        id: 5,
-        name: "Taco Mexico",
-        cuisine: "Mexican",
-        location: "Al-Ziraa",
-        rating: 4.3,
-        deliveryFee: 2.0,
-        deliveryTime: "25 - 40 min",
-        image: "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=900&q=85",
-    },
-    {
-        id: 6,
-        name: "Ocean Catch",
-        cuisine: "Seafood",
-        location: "Corniche",
-        rating: 4.7,
-        deliveryFee: 3.5,
-        deliveryTime: "40 - 60 min",
-        image: "https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=900&q=85",
-    },
-    {
-        id: 7,
-        name: "Cafe de Paris",
-        cuisine: "Desserts & Drinks",
-        location: "Al-Rawda",
-        rating: 4.4,
-        deliveryFee: 1.5,
-        deliveryTime: "20 - 35 min",
-        image: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=900&q=85",
-    },
-    {
-        id: 8,
-        name: "WoodFire Grills",
-        cuisine: "Middle Eastern",
-        location: "District 7",
-        rating: 4.8,
-        deliveryFee: 2.0,
-        deliveryTime: "30 - 45 min",
-        image: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=900&q=85",
-    },
-    {
-        id: 9,
-        name: "Pasta & Inferno",
-        cuisine: "Italian",
-        location: "Downtown",
-        rating: 4.2,
-        deliveryFee: 2.0,
-        deliveryTime: "25 - 35 min",
-        image: "https://img.magnific.com/free-photo/penne-pasta-tomato-sauce-with-chicken-tomatoes-wooden-table_2829-19744.jpg?semt=ais_hybrid&w=740&q=80",
-    },
-];
+
 
 const cuisines = [
-    "All",
-    "Fast Food",
-    "Italian",
-    "Middle Eastern",
-    "Asian",
-    "Mexican",
-    "Seafood",
-    "Desserts & Drinks",
+	'All',
+	'Fast Food',
+	'Italian',
+	'Middle Eastern',
+	'Asian',
+	'Mexican',
+	'Seafood',
+	'Desserts & Drinks',
 ];
 
 const locations = [
-    "All",
-    "Downtown",
-    "Al-Rawda",
-    "District 7",
-    "Al-Ziraa",
-    "Corniche",
+	'All',
+	'Downtown',
+	'Al-Rawda',
+	'District 7',
+	'Al-Ziraa',
+	'Corniche',
 ];
 
 // Shared look for the pill fields in the filter bar
 const fieldClass =
-    "h-12 w-full cursor-pointer appearance-none rounded-full border border-line bg-surface pl-11 pr-10 text-sm font-medium text-ink shadow-card outline-none transition focus:ring-4 focus:ring-primary/20";
+	'h-12 w-full cursor-pointer appearance-none rounded-full border border-line bg-surface pl-11 pr-10 text-sm font-medium text-ink shadow-card outline-none transition focus:ring-4 focus:ring-primary/20';
 const arrowClass =
-    "pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 border-x-[5px] border-t-[6px] border-x-transparent";
+	'pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 border-x-[5px] border-t-[6px] border-x-transparent';
 
-const Resturants = () => {
-    const [search, setSearch] = useState("");
-    const [cuisine, setCuisine] = useState("All");
-    const [location, setLocation] = useState("All");
-    const [minRating, setMinRating] = useState("0");
-    const [sort, setSort] = useState("default");
-    const [currentPage, setCurrentPage] = useState(1);
-    const [favorites, setFavorites] = useState(() => {
-        try {
-            const saved = JSON.parse(localStorage.getItem("wishlist"));
-            return Array.isArray(saved) ? saved : [];
-        } catch {
-            return [];
-        }
-    });
-    const [toast, setToast] = useState("");
-    const toastTimer = useRef(null);
-    const [showTop, setShowTop] = useState(false);
-    const itemsPerPage = 8;
-
-    useEffect(() => {
-        const handleScroll = () => setShowTop(window.scrollY > 400);
-
-        window.addEventListener("scroll", handleScroll, { passive: true });
-        return () => window.removeEventListener("scroll", handleScroll);
-    }, []);
-
-    const showToast = (message) => {
-        setToast(message);
-        clearTimeout(toastTimer.current);
-        toastTimer.current = setTimeout(() => setToast(""), 2000);
-    };
-
-    const filteredRestaurants = useMemo(() => {
-        const query = search.trim().toLowerCase();
-
-        const results = restaurants.filter((item) => {
-            const matchesSearch =
-                !query ||
-                item.name.toLowerCase().includes(query) ||
-                item.cuisine.toLowerCase().includes(query) ||
-                item.location.toLowerCase().includes(query);
-
-            const matchesCuisine = cuisine === "All" || item.cuisine === cuisine;
-            const matchesLocation = location === "All" || item.location === location;
-            const matchesRating = item.rating >= parseFloat(minRating);
-
-            return matchesSearch && matchesCuisine && matchesLocation && matchesRating;
-        });
-
-        return [...results].sort((a, b) => {
-            if (sort === "rating-high") return b.rating - a.rating;
-            if (sort === "delivery-low") return a.deliveryFee - b.deliveryFee;
-            if (sort === "name") return a.name.localeCompare(b.name);
-            return a.id - b.id;
-        });
-    }, [search, cuisine, location, minRating, sort]);
-
-    const totalPages = Math.ceil(filteredRestaurants.length / itemsPerPage);
-    const currentRestaurants = filteredRestaurants.slice(
-        (currentPage - 1) * itemsPerPage,
-        currentPage * itemsPerPage
-    );
-
-    const sortLabels = {
-        "rating-high": "Highest rated",
-        "delivery-low": "Lowest delivery fee",
-        name: "Alphabetical",
-    };
-
-    const activeFilters = [
-        search && { label: `"${search}"`, clear: () => setSearch("") },
-        cuisine !== "All" && { label: cuisine, clear: () => setCuisine("All") },
-        location !== "All" && { label: location, clear: () => setLocation("All") },
-        minRating !== "0" && {
-            label: `${minRating}+ rating`,
-            clear: () => setMinRating("0"),
-        },
-        sort !== "default" && {
-            label: sortLabels[sort],
-            clear: () => setSort("default"),
-        },
-    ].filter(Boolean);
-
-    const hasActiveFilters =
-        search || cuisine !== "All" || location !== "All" || minRating !== "0" || sort !== "default";
-
-    const clearFilters = () => {
-        setSearch("");
-        setCuisine("All");
-        setLocation("All");
-        setMinRating("0");
-        setSort("default");
-        setCurrentPage(1);
-    };
-
-    const toggleFavorite = (restaurant) => {
-        const isAdding = !favorites.includes(restaurant.id);
-        const updated = isAdding
-            ? [...favorites, restaurant.id]
-            : favorites.filter((id) => id !== restaurant.id);
-
-        setFavorites(updated);
-        localStorage.setItem("wishlist", JSON.stringify(updated));
-        window.dispatchEvent(new Event("wishlistChanged"));
-        showToast(isAdding ? "Added to wishlist" : "Removed from wishlist");
-    };
-
-    const handleAddToCart = (restaurant) => {
-        const cart = JSON.parse(localStorage.getItem("cart")) || [];
-        localStorage.setItem("cart", JSON.stringify([...cart, restaurant.id]));
-        window.dispatchEvent(new Event("cartChanged"));
-        showToast(`${restaurant.name} added to cart`);
-    };
-
-    const getPageNumbers = () =>
-        Array.from({ length: totalPages }, (_, i) => i + 1);
-
-    return (
+const Restaurants = () => {
+	const [search, setSearch] = useState("");
+			const [cuisine, setCuisine] = useState("All");
+			const [location, setLocation] = useState("All");
+			const [minRating, setMinRating] = useState("0");
+			const [sort, setSort] = useState("default");
+			const [currentPage, setCurrentPage] = useState(1);
+			const { wishlistIds: favorites, toggleWishlist } = useWishlist();
+			const navigate = useNavigate();
+			const [toast, setToast] = useState("");
+			const toastTimer = useRef(null);
+			const [showTop, setShowTop] = useState(false);
+			const itemsPerPage = 8;
+	
+			useEffect(() => {
+					const handleScroll = () => setShowTop(window.scrollY > 400);
+	
+					window.addEventListener("scroll", handleScroll, { passive: true });
+					return () => window.removeEventListener("scroll", handleScroll);
+			}, []);
+	
+			const showToast = (message) => {
+					setToast(message);
+					clearTimeout(toastTimer.current);
+					toastTimer.current = setTimeout(() => setToast(""), 2000);
+			};
+	
+			const filteredRestaurants = useMemo(() => {
+					const query = search.trim().toLowerCase();
+	
+					const results = restaurants.filter((item) => {
+							const matchesSearch =
+									!query ||
+									item.name.toLowerCase().includes(query) ||
+									item.cuisine.toLowerCase().includes(query) ||
+									item.location.toLowerCase().includes(query);
+	
+							const matchesCuisine = cuisine === "All" || item.cuisine === cuisine;
+							const matchesLocation = location === "All" || item.location === location;
+							const matchesRating = item.rating >= parseFloat(minRating);
+	
+							return matchesSearch && matchesCuisine && matchesLocation && matchesRating;
+					});
+	
+					return [...results].sort((a, b) => {
+							if (sort === "rating-high") return b.rating - a.rating;
+							if (sort === "delivery-low") return a.deliveryFee - b.deliveryFee;
+							if (sort === "name") return a.name.localeCompare(b.name);
+							return a.id - b.id;
+					});
+			}, [search, cuisine, location, minRating, sort]);
+	
+			const totalPages = Math.ceil(filteredRestaurants.length / itemsPerPage);
+			const currentRestaurants = filteredRestaurants.slice(
+					(currentPage - 1) * itemsPerPage,
+					currentPage * itemsPerPage
+			);
+	
+			const sortLabels = {
+					"rating-high": "Highest rated",
+					"delivery-low": "Lowest delivery fee",
+					name: "Alphabetical",
+			};
+	
+			const activeFilters = [
+					search && { label: `"${search}"`, clear: () => setSearch("") },
+					cuisine !== "All" && { label: cuisine, clear: () => setCuisine("All") },
+					location !== "All" && { label: location, clear: () => setLocation("All") },
+					minRating !== "0" && {
+							label: `${minRating}+ rating`,
+							clear: () => setMinRating("0"),
+					},
+					sort !== "default" && {
+							label: sortLabels[sort],
+							clear: () => setSort("default"),
+					},
+			].filter(Boolean);
+	
+			const hasActiveFilters =
+					search || cuisine !== "All" || location !== "All" || minRating !== "0" || sort !== "default";
+	
+			const clearFilters = () => {
+					setSearch("");
+					setCuisine("All");
+					setLocation("All");
+					setMinRating("0");
+					setSort("default");
+					setCurrentPage(1);
+			};
+	
+			const toggleFavorite = (restaurant) => {
+					const isAdding = !favorites.includes(restaurant.id);
+	
+					toggleWishlist(restaurant.id);
+					showToast(isAdding ? "Added to wishlist" : "Removed from wishlist");
+			};
+	
+			// TODO: only one details page exists for now (/restaurants/:id later)
+			const handleViewDetails = () => navigate("/restaurants/taza-041");
+	
+			const getPageNumbers = () =>
+					Array.from({ length: totalPages }, (_, i) => i + 1);
+	
+	return (
         <div className="min-h-screen bg-page px-4 pb-16 sm:px-6 lg:px-8">
             <section className="mx-auto max-w-2xl py-8 text-center md:py-20">
                 <h1 className="mt-6 text-ink">
@@ -410,12 +307,12 @@ const Resturants = () => {
 
                     <div className="mt-3 grid grid-cols-1 gap-5 min-[451px]:grid-cols-2 min-[791px]:grid-cols-3 min-[1024px]:grid-cols-4">
                         {currentRestaurants.map((restaurant) => (
-                            <ResturantCard
+                            <RestaurantCard
                                 key={restaurant.id}
                                 restaurant={restaurant}
                                 isFavorite={favorites.includes(restaurant.id)}
                                 onToggleFavorite={toggleFavorite}
-                                onAddToCart={handleAddToCart}
+                                onViewDetails={handleViewDetails}
                             />
                         ))}
                     </div>
@@ -510,4 +407,4 @@ const Resturants = () => {
     );
 };
 
-export default Resturants;
+export default Restaurants;
