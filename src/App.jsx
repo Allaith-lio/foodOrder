@@ -1,27 +1,34 @@
 import { Routes, Route } from "react-router-dom";
-import Layout from "./components/layout/Layout";
+
 import Home from "./pages/Home";
 import LoginAndRegister from "./pages/LoginAndRegister";
-import ResturantsDetalies from "./pages/ResturantsDetalies";
-import Resturants from "./Pages/Resturants";
+
 import Wishlist from "./Pages/Wishlist";
-import VendorLayout from "./components/vendor/VendorLayout";
 import Dashboard from "./pages/vendor/Dashboard";
 import OrdersManagement from "./pages/vendor/OrdersManagement";
 import CustomersManagement from "./pages/vendor/CustomersManagement";
 
+import MainLayout from "./layouts/MainLayout";
+import AuthLayout from "./layouts/AuthLayout";
+import VendorLayout from "./layouts/VendorLayout";
+import Restaurants from "./pages/Restaurants";
+import RestaurantsDetails from "./pages/RestaurantsDetalies";
+
 export default function App() {
   return (
     <Routes>
-      <Route path="/login" element={<LoginAndRegister />} />
-      <Route path="/register" element={<LoginAndRegister />} />
-      <Route path="/restaurants" element={<Resturants />} />
-      <Route path="/wishlist" element={<Wishlist />} />
-      <Route element={<Layout />}>
+      <Route element={<MainLayout />}>
         <Route index element={<Home />} />
-        <Route path="/restaurants/taza-041" element={<ResturantsDetalies />} />
-        {/* teammates add their pages here */}
+        <Route path="/restaurants" element={<Restaurants />} />
+        <Route path="/restaurants/taza-041" element={<RestaurantsDetails />} />
+        <Route path="/wishlist" element={<Wishlist />} />
       </Route>
+
+      <Route element={<AuthLayout />}>
+        <Route path="/login" element={<LoginAndRegister />} />
+        <Route path="/register" element={<LoginAndRegister />} />
+      </Route>
+
       {/* Vendor area (sidebar layout) - Nour */}
       <Route path="/vendor" element={<VendorLayout />}>
         <Route index element={<Dashboard />} />
@@ -31,9 +38,3 @@ export default function App() {
     </Routes>
   );
 }
-
-/*
-
-Resturant Detalis and Login/Register page
-
-*/

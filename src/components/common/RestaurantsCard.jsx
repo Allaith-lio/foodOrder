@@ -1,10 +1,9 @@
-import { Star, MapPin, Utensils, Clock, Heart, ShoppingCart } from "lucide-react";
+import { Star, MapPin, Utensils, Clock, Heart} from "lucide-react";
 
 const RestaurantCard = ({
   restaurant,
   isFavorite,
   onToggleFavorite,
-  onAddToCart,
   onViewDetails,
 }) => {
   const { name, cuisine, location, rating, deliveryFee, deliveryTime, image } =
@@ -71,19 +70,19 @@ const RestaurantCard = ({
               <button
                 type="button"
                 onClick={() => onViewDetails?.(restaurant)}
-                className="flex flex-1 items-center justify-center rounded-full border border-white/40 px-3 py-2 text-xs font-bold text-white transition hover:bg-white/10 cursor-pointer"
+                className="flex w-full items-center justify-center rounded-full px-3 py-2 text-xs font-bold text-black btn-secondary hover:bg-secondary-hover cursor-pointer"
               >
                 View Details
               </button>
 
-              <button
+              {/* <button
                 type="button"
                 onClick={() => onAddToCart?.(restaurant)}
                 className="flex flex-1 items-center justify-center gap-1 rounded-full px-3 py-2 text-xs font-bold text-black btn-secondary hover:bg-secondary-hover cursor-pointer"
               >
                 <ShoppingCart className="size-3.5" />
                 Add to Cart
-              </button>
+              </button> */}
             </div>
           </div>
         </div>

@@ -19,9 +19,11 @@ import {
   UtensilsCrossed,
 } from "lucide-react";
 import "leaflet/dist/leaflet.css";
+import { useShoppingCart } from "../hooks/CartContext";
+import { parsePrice, slugify } from "../utils/format";
 
 const restaurantLocation = [35.5317, 35.7901];
-
+const RESTAURANT = { id: "taza-041", name: "Taza 041" };
 const favoriteDishes = [
   {
     name: "Taza Signature Shawarma",
@@ -473,6 +475,15 @@ function PopularSlider() {
 }
 
 function MenuSection() {
+  const { addToCart } = useShoppingCart();
+  
+    const handleAdd = (item) =>
+      addToCart({
+        id: `${RESTAURANT.id}:${slugify(item.name)}`,
+        name: item.name,
+        price: parsePrice(item.price),
+        restaurant: RESTAURANT.name,
+      });
   return (
     <section id="menu" className="scroll-mt-24">
       <SectionHeading
@@ -526,9 +537,19 @@ function MenuSection() {
                       {item.detail}
                     </p>
                   </div>
-                  <span className="shrink-0 pt-0.5 text-[11px] font-bold">
-                    {item.price}
-                  </span>
+                  <div className="flex shrink-0 flex-col items-end gap-2">
+                    <span className="pt-0.5 text-[11px] font-bold">
+                      {item.price}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => handleAdd(item)}
+                      aria-label={`Add ${item.name} to cart`}
+                      className="flex size-7 cursor-pointer items-center justify-center rounded-full bg-primary text-white transition-colors hover:bg-primary-hover"
+                    >
+                      <Plus className="size-3.5" />
+                    </button>
+                  </div>
                 </article>
               ))}
             </div>
@@ -580,7 +601,7 @@ function GuestStories() {
   );
 }
 
-export default function ResturantsDetalies() {
+export default function RestaurantsDetails() {
   return (
     <main className="min-h-screen bg-[#f8f6f1] pb-10">
       <div className="mx-auto max-w-7xl px-4 pb-8 pt-5 sm:px-6 lg:pt-7">
@@ -592,7 +613,9 @@ export default function ResturantsDetalies() {
             Explore
           </a>
           <span aria-hidden="true">/</span>
-          <span>Restaurants</span>
+          <a href="/" className="text-muted no-underline hover:text-primary">
+            Restaurants
+          </a>
           <span aria-hidden="true">/</span>
           <span aria-current="page" className="font-bold text-ink">
             Taza 041

@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { Heart, Truck, Clock, ChevronLeft, ChevronRight, Flame } from "lucide-react";
+import { Truck, Clock, ChevronLeft, ChevronRight, Flame } from "lucide-react";
 import { offers } from "../../data/homeData";
 import SectionHeading from "./SectionHeading";
 import FoodImage from "../ui/FoodImage";
@@ -38,9 +38,6 @@ export default function SpecialOffers() {
                 <span className={`absolute left-3 top-3 flex gap-1 rounded px-2 py-0.5 text-[10px] font-bold uppercase ${offer.badgeColor}`}>
                   <Flame className="size-3.5 text-white" /> {offer.badge}
                 </span>
-                <button className="absolute right-3 top-3 rounded-full bg-white p-1.5 text-stone-500 hover:text-primary" aria-label="Save">
-                  <Heart className="size-4" />
-                </button>
               </div>
 
               <div className="p-4">
