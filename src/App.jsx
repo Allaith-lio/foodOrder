@@ -2,7 +2,8 @@ import { Routes, Route } from "react-router-dom";
 
 import Home from "./pages/Home";
 import LoginAndRegister from "./pages/LoginAndRegister";
-
+import Cart from "./pages/Cart";
+import MyOrders from "./pages/MyOrders";
 import Wishlist from "./Pages/Wishlist";
 import Dashboard from "./pages/vendor/Dashboard";
 import OrdersManagement from "./pages/vendor/OrdersManagement";
@@ -22,6 +23,8 @@ export default function App() {
         <Route path="/restaurants" element={<Restaurants />} />
         <Route path="/restaurants/taza-041" element={<RestaurantsDetails />} />
         <Route path="/wishlist" element={<Wishlist />} />
+        <Route path="/myCart" element={<Cart />} />
+        <Route path="/myOrders" element={<MyOrders />} />
       </Route>
 
       <Route element={<AuthLayout />}>

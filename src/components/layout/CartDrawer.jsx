@@ -5,7 +5,8 @@ import FoodImage from "../ui/FoodImage";
 import { useShoppingCart } from "../../hooks/CartContext";
 import { formatPrice } from "../../utils/format";
 
-const FOCUSABLE = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
+const FOCUSABLE =
+  'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 export default function CartDrawer() {
   const {
@@ -98,7 +99,10 @@ export default function CartDrawer() {
         {/* Header */}
         <div className="flex shrink-0 items-center justify-between gap-3 border-b border-line px-5 py-4">
           <div>
-            <h2 id="cart-title" className="font-heading text-lg font-bold text-ink">
+            <h2
+              id="cart-title"
+              className="font-heading text-lg font-bold text-ink"
+            >
               Your Order{cartCount > 0 && ` (${cartCount})`}
             </h2>
 
@@ -157,7 +161,11 @@ export default function CartDrawer() {
                 >
                   <div className="size-20 shrink-0 overflow-hidden rounded-control bg-page">
                     {item.image ? (
-                      <FoodImage src={item.image} alt={item.name} className="size-full" />
+                      <FoodImage
+                        src={item.image}
+                        alt={item.name}
+                        className="size-full"
+                      />
                     ) : (
                       <div className="flex size-full items-center justify-center text-muted">
                         <Utensils className="size-6" />
@@ -189,7 +197,9 @@ export default function CartDrawer() {
                         <button
                           type="button"
                           disabled={item.quantity <= 1}
-                          onClick={() => updateCartQuantity(item.id, item.quantity - 1)}
+                          onClick={() =>
+                            updateCartQuantity(item.id, item.quantity - 1)
+                          }
                           aria-label={`Decrease quantity of ${item.name}`}
                           className="flex size-8 cursor-pointer items-center justify-center text-muted transition-colors hover:text-primary disabled:cursor-not-allowed disabled:opacity-40"
                         >
@@ -202,7 +212,9 @@ export default function CartDrawer() {
 
                         <button
                           type="button"
-                          onClick={() => updateCartQuantity(item.id, item.quantity + 1)}
+                          onClick={() =>
+                            updateCartQuantity(item.id, item.quantity + 1)
+                          }
                           aria-label={`Increase quantity of ${item.name}`}
                           className="flex size-8 cursor-pointer items-center justify-center text-muted transition-colors hover:text-primary"
                         >
@@ -240,7 +252,6 @@ export default function CartDrawer() {
               Delivery fee is calculated at checkout.
             </p>
 
-            
             <Link
               to="/checkout"
               onClick={closeCart}
@@ -249,7 +260,7 @@ export default function CartDrawer() {
               Checkout
             </Link>
             <Link
-              to="/cart"
+              to="/myCart"
               onClick={closeCart}
               className="btn btn-outline mt-3 w-full no-underline"
             >

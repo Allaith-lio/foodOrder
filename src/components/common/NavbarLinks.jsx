@@ -33,7 +33,7 @@ const menuLinks = [
   { to: "/products", label: "Shop", Icon: List },
   { to: "/wishlist", label: "Wishlist", Icon: Heart, badge: "wishlist" },
   { to: "/myCart", label: "My Cart", Icon: ShoppingCart },
-  { to: "/user/profile#orders", label: "My orders", Icon: Package },
+  { to: "/myOrders", label: "My orders", Icon: Package },
 ];
 
 // Mobile help links

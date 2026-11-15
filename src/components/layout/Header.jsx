@@ -22,7 +22,7 @@ const navLinks = [
   { label: "Explore", to: "/", end: true },
   { label: "Offers", to: "/offers" },
   { label: "Restaurants", to: "/restaurants" },
-  { label: "My Orders", to: "/orders" },
+  { label: "My Orders", to: "/myOrders" },
 ];
 
 // Same look for theme / wishlist / cart buttons
@@ -65,7 +65,9 @@ export default function Header() {
     setShowLocation(false);
   };
 
-  const themeLabel = isDarkMode ? "Switch to light mode" : "Switch to dark mode";
+  const themeLabel = isDarkMode
+    ? "Switch to light mode"
+    : "Switch to dark mode";
 
   return (
     <>
@@ -83,7 +85,10 @@ export default function Header() {
           </Link>
 
           {/* Desktop navigation */}
-          <nav aria-label="Main navigation" className="hidden items-center gap-7 md:flex">
+          <nav
+            aria-label="Main navigation"
+            className="hidden items-center gap-7 md:flex"
+          >
             {navLinks.map((link) => (
               <NavLink
                 key={link.to}
@@ -107,7 +112,9 @@ export default function Header() {
               <MapPin className="size-5 shrink-0 text-primary" />
 
               <span className="min-w-0 leading-tight">
-                <span className="block text-[10px] font-medium text-muted">Deliver to</span>
+                <span className="block text-[10px] font-medium text-muted">
+                  Deliver to
+                </span>
                 <span className="block truncate text-xs font-bold text-ink">
                   {locationLabel}
                 </span>
@@ -169,7 +176,11 @@ export default function Header() {
               aria-expanded={menuOpen}
               className="flex size-11 cursor-pointer items-center justify-center rounded-xl border border-line text-ink transition-colors hover:bg-page md:hidden"
             >
-              {menuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
+              {menuOpen ? (
+                <X className="size-5" />
+              ) : (
+                <Menu className="size-5" />
+              )}
             </button>
           </div>
         </div>
@@ -218,7 +229,11 @@ export default function Header() {
               <div className="my-2 border-t border-line" />
 
               {/* Wishlist */}
-              <NavLink to="/wishlist" onClick={closeMenu} className={mobileLinkStyle}>
+              <NavLink
+                to="/wishlist"
+                onClick={closeMenu}
+                className={mobileLinkStyle}
+              >
                 <Heart className="size-4" />
                 <span>Wishlist</span>
 
@@ -235,7 +250,11 @@ export default function Header() {
                 onClick={toggleTheme}
                 className="flex cursor-pointer items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-semibold text-ink transition-colors hover:bg-page hover:text-primary"
               >
-                {isDarkMode ? <Sun className="size-4 text-amber-400" /> : <Moon className="size-4" />}
+                {isDarkMode ? (
+                  <Sun className="size-4 text-amber-400" />
+                ) : (
+                  <Moon className="size-4" />
+                )}
                 <span>{isDarkMode ? "Light mode" : "Dark mode"}</span>
               </button>
 
