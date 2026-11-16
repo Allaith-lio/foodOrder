@@ -16,15 +16,15 @@ export default function OrderTabs({ activeTab, onTabChange }) {
             onClick={() => onTabChange(t.id)}
             className={`flex items-center gap-2 rounded-lg border px-5 py-2.5 text-sm font-semibold transition ${
               on
-                ? "border-slate-900 bg-slate-900 text-white"
-                : "border-slate-200 bg-white text-slate-700 hover:border-slate-300"
+                ? "border-ink bg-ink text-surface"
+                : "border-line bg-surface text-ink hover:border-primary"
             }`}
           >
             {t.label}
             {t.count !== undefined && (
               <span
                 className={`grid min-w-5 place-items-center rounded-full px-1.5 text-[10px] font-bold ${
-                  on ? "bg-orange-500 text-white" : "bg-slate-100 text-slate-600"
+                  on ? "bg-primary text-white" : "bg-page text-muted"
                 }`}
               >
                 {t.count}

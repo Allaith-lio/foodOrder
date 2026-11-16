@@ -14,19 +14,19 @@ export default function DeliveryMap() {
           </p>
         </div>
 
-        <span className="flex w-fit items-center gap-2 rounded-full bg-green-50 px-3 py-2 text-xs font-semibold text-green-700">
-          <span className="size-2 animate-pulse rounded-full bg-green-500" />
+        <span className="flex w-fit items-center gap-2 rounded-full bg-tertiary/10 px-3 py-2 text-xs font-semibold text-tertiary">
+          <span className="size-2 animate-pulse rounded-full bg-tertiary" />
           Live tracking
         </span>
       </div>
 
-      <div className="relative h-64 overflow-hidden rounded-2xl border border-line bg-[#eef2e8] sm:h-72">
+      <div className="relative h-64 overflow-hidden rounded-2xl border border-line bg-page sm:h-72">
         {/* Decorative roads */}
         <div className="absolute inset-0">
-          <div className="absolute -left-10 top-20 h-8 w-[120%] rotate-12 bg-white" />
-          <div className="absolute -left-10 top-44 h-7 w-[120%] -rotate-12 bg-white" />
-          <div className="absolute left-1/4 -top-10 h-[130%] w-8 rotate-12 bg-white" />
-          <div className="absolute right-1/4 -top-10 h-[130%] w-7 -rotate-12 bg-white" />
+          <div className="absolute -left-10 top-20 h-8 w-[120%] rotate-12 bg-surface" />
+          <div className="absolute -left-10 top-44 h-7 w-[120%] -rotate-12 bg-surface" />
+          <div className="absolute left-1/4 -top-10 h-[130%] w-8 rotate-12 bg-surface" />
+          <div className="absolute right-1/4 -top-10 h-[130%] w-7 -rotate-12 bg-surface" />
         </div>
 
         {/* Route */}
@@ -34,26 +34,26 @@ export default function DeliveryMap() {
 
         {/* Restaurant */}
         <div className="absolute left-[12%] top-[38%] flex flex-col items-center gap-2">
-          <div className="flex size-12 items-center justify-center rounded-full bg-primary text-white shadow-lg ring-4 ring-white">
+          <div className="flex size-12 items-center justify-center rounded-full bg-primary text-surface shadow-lg ring-4 ring-surface">
             <MapPin className="size-6" />
           </div>
-          <span className="rounded-lg bg-white px-2 py-1 text-xs font-bold text-ink shadow">
+          <span className="rounded-lg bg-surface px-2 py-1 text-xs font-bold text-ink shadow">
             Restaurant
           </span>
         </div>
 
         {/* Driver */}
         <div className="absolute right-[12%] top-[38%] flex flex-col items-center gap-2">
-          <div className="flex size-12 items-center justify-center rounded-full bg-ink text-white shadow-lg ring-4 ring-white">
+          <div className="flex size-12 items-center justify-center rounded-full bg-ink text-surface shadow-lg ring-4 ring-surface">
             <Bike className="size-6" />
           </div>
-          <span className="rounded-lg bg-white px-2 py-1 text-xs font-bold text-ink shadow">
+          <span className="rounded-lg bg-surface px-2 py-1 text-xs font-bold text-ink shadow">
             Delivery partner
           </span>
         </div>
 
         {/* Tracking label */}
-        <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 items-center gap-2 whitespace-nowrap rounded-full bg-white px-4 py-2.5 text-xs font-semibold text-ink shadow-md">
+        <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 items-center gap-2 whitespace-nowrap rounded-full bg-surface px-4 py-2.5 text-xs font-semibold text-ink shadow-md">
           <Navigation className="size-4 text-primary" />
           Your order is on its way
         </div>

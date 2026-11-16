@@ -1,5 +1,5 @@
 import { Star, Plus } from 'lucide-react';
-import { dishes } from '../../data/homeData';
+import { getPopularDishes, toCartItem } from '../../data/catalog';
 import SectionHeading from './SectionHeading';
 import FoodImage from '../ui/FoodImage';
 import { useShoppingCart } from '../../hooks/CartContext';
@@ -7,6 +7,7 @@ import { useShoppingCart } from '../../hooks/CartContext';
 
 export default function PopularDishes() {
 	const { addToCart, getItemQuantity } = useShoppingCart();
+	const popularDishes = getPopularDishes();
   
 	return (
 		<section className="mx-auto max-w-7xl px-4 pt-14 sm:px-6">
@@ -20,8 +21,8 @@ export default function PopularDishes() {
 			</SectionHeading>
 
 			<div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-				{dishes.map(dish => {
-					const cartId = `dish-${dish.id}`;
+				{popularDishes.map(dish => {
+					const cartId = dish.id;
 					const inCart = getItemQuantity(cartId);
           
 					return (
@@ -55,7 +56,7 @@ export default function PopularDishes() {
 
 								<h3 className="mt-2 !text-base">{dish.name}</h3>
 								<p className="mt-1 line-clamp-2 text-xs text-muted">
-									{dish.text}
+									{dish.description}
 								</p>
 
 								<div className="mt-4 flex items-center justify-between">
@@ -64,15 +65,7 @@ export default function PopularDishes() {
 									</span>
 									<button
 										type="button"
-										onClick={() =>
-											addToCart({
-												id: cartId,
-												name: dish.name,
-												price: dish.price,
-												image: dish.image,
-												restaurant: dish.restaurant,
-											})
-										}
+										onClick={() => addToCart(toCartItem(dish))}
 										aria-label={`Add ${dish.name} to cart`}
 										className="btn btn-primary !gap-1 !px-3 !py-1.5 !text-xs"
 									>

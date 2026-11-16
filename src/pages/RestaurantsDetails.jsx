@@ -20,108 +20,18 @@ import {
 } from "lucide-react";
 import "leaflet/dist/leaflet.css";
 import { useShoppingCart } from "../hooks/CartContext";
-import { parsePrice, slugify } from "../utils/format";
+import {
+  getRestaurantBySlug,
+  getFeaturedDishes,
+  getMenuCategories,
+  toCartItem,
+} from "../data/catalog";
+import FoodImage from "../components/ui/FoodImage";
 
 const restaurantLocation = [35.5317, 35.7901];
-const RESTAURANT = { id: "taza-041", name: "Taza 041" };
-const favoriteDishes = [
-  {
-    name: "Taza Signature Shawarma",
-    description: "Slow-roasted chicken, garlic toum, and warm saj.",
-    price: "450 SYP",
-    image: "photo-1626700051175-6818013e1d4f",
-    label: "A local favorite",
-  },
-  {
-    name: "Crispy Chicken Meal",
-    description: "Golden, crunchy chicken with seasoned fries.",
-    price: "680 SYP",
-    image: "photo-1626082927389-6cd097cdc6ec",
-    label: "Crowd pleaser",
-  },
-  {
-    name: "Smash Beef Burger",
-    description: "Juicy beef, melted cheese, and Taza sauce.",
-    price: "720SYP",
-    image: "photo-1568901346375-23c9450c58cd",
-    label: "Must try",
-  },
-  {
-    name: "Loaded Taza Fries",
-    description: "Crispy fries with cheese and house seasoning.",
-    price: "380 SYP",
-    image: "photo-1573080496219-bb080dd4f877",
-    label: "Perfect to share",
-  },
-];
-
-const menuCategories = [
-  {
-    id: "shawarma",
-    name: "Shawarma",
-    items: [
-      {
-        name: "Chicken Shawarma Wrap",
-        detail: "Chicken, garlic sauce, pickles, and fries in saj bread.",
-        price: "350 SYP",
-        badge: "POPULAR",
-      },
-      {
-        name: "Taza Signature Shawarma",
-        detail: "Slow-roasted chicken with extra toum and house spices.",
-        price: "450 SYP",
-        badge: "CHEF'S PICK",
-      },
-      {
-        name: "Beef Shawarma Plate",
-        detail: "Tender beef, fresh salad, hummus, and warm bread.",
-        price: "780 SYP",
-      },
-    ],
-  },
-  {
-    id: "burgers",
-    name: "Burgers & Chicken",
-    items: [
-      {
-        name: "Smash Beef Burger",
-        detail: "Double smashed beef, cheddar, lettuce, and Taza sauce.",
-        price: "720 SYP",
-      },
-      {
-        name: "Crispy Chicken Burger",
-        detail: "Buttermilk-marinated chicken, slaw, and a little kick.",
-        price: "580 SYP",
-      },
-      {
-        name: "Crispy Chicken Meal",
-        detail: "Crispy chicken, golden fries, and your choice of dip.",
-        price: "680 SYP",
-      },
-    ],
-  },
-  {
-    id: "sides",
-    name: "Sides & Drinks",
-    items: [
-      {
-        name: "Loaded Taza Fries",
-        detail: "Crispy fries with cheese, herbs, and signature seasoning.",
-        price: "380 SYP",
-      },
-      {
-        name: "Garden Fattoush",
-        detail: "Seasonal greens, crisp pita, sumac, and pomegranate molasses.",
-        price: "320 SYP",
-      },
-      {
-        name: "Fresh Lemon Mint",
-        detail: "Freshly squeezed lemon, mint, and a touch of sweetness.",
-        price: "180 SYP",
-      },
-    ],
-  },
-];
+const restaurant = getRestaurantBySlug("taza-041");
+const favoriteDishes = getFeaturedDishes(restaurant.id);
+const menuCategories = getMenuCategories(restaurant.id);
 
 const reviews = [
   {
@@ -446,10 +356,10 @@ function PopularSlider() {
             className="w-[min(74vw,15.5rem)] shrink-0 snap-start overflow-hidden rounded-2xl border border-line bg-white"
           >
             <div className="relative h-36 overflow-hidden bg-[#f0e9df]">
-              <FoodPhoto
-                image={dish.image}
+              <FoodImage
+                src={dish.image}
                 alt={dish.name}
-                className="size-full object-cover transition duration-500 hover:scale-105"
+                className="size-full transition duration-500 hover:scale-105"
               />
               <span className="absolute bottom-2 left-2 rounded-full bg-white/95 px-2.5 py-1 text-[9px] font-bold text-ink shadow-sm">
                 {dish.label}
@@ -461,7 +371,7 @@ function PopularSlider() {
                 {dish.description}
               </p>
               <div className="mt-3 flex items-center justify-between border-t border-line pt-3">
-                <span className="text-xs font-bold">{dish.price}</span>
+                <span className="text-xs font-bold">{dish.price} SYP</span>
                 <span className="flex items-center gap-1 text-[10px] font-bold text-amber-600">
                   <Star className="size-3 fill-current" /> 4.9
                 </span>
@@ -477,13 +387,7 @@ function PopularSlider() {
 function MenuSection() {
   const { addToCart } = useShoppingCart();
   
-    const handleAdd = (item) =>
-      addToCart({
-        id: `${RESTAURANT.id}:${slugify(item.name)}`,
-        name: item.name,
-        price: parsePrice(item.price),
-        restaurant: RESTAURANT.name,
-      });
+  const handleAdd = (item) => addToCart(toCartItem(item));
   return (
     <section id="menu" className="scroll-mt-24">
       <SectionHeading
@@ -534,12 +438,12 @@ function MenuSection() {
                       )}
                     </div>
                     <p className="mt-1 text-[11px] leading-4 text-muted">
-                      {item.detail}
+                      {item.description}
                     </p>
                   </div>
                   <div className="flex shrink-0 flex-col items-end gap-2">
                     <span className="pt-0.5 text-[11px] font-bold">
-                      {item.price}
+                      {item.price} SYP
                     </span>
                     <button
                       type="button"

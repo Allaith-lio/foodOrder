@@ -6,8 +6,16 @@ const RestaurantCard = ({
   onToggleFavorite,
   onViewDetails,
 }) => {
-  const { name, cuisine, location, rating, deliveryFee, deliveryTime, image } =
-    restaurant;
+  const {
+    name,
+    cuisine,
+    location,
+    rating,
+    deliveryFee,
+    deliveryFeeText,
+    deliveryTime,
+    image,
+  } = restaurant;
 
   return (
     <article className="group relative h-80 cursor-pointer overflow-hidden rounded-card bg-surface shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-raised focus-within:-translate-y-1 focus-within:shadow-raised">
@@ -60,9 +68,10 @@ const RestaurantCard = ({
                 {deliveryTime}
               </span>
               <span className="font-bold text-secondary">
-                {deliveryFee === 0
-                  ? "Free delivery"
-                  : `$${deliveryFee.toFixed(2)} delivery`}
+                {deliveryFeeText ||
+                  (deliveryFee === 0
+                    ? "Free delivery"
+                    : `$${deliveryFee.toFixed(2)} delivery`)}
               </span>
             </div>
 

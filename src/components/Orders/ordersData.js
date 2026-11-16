@@ -72,4 +72,4 @@ export const cancelledOrders = [
 export const money = (n) => `$${n.toFixed(2)}`;
 
 // Shared card style
-export const cardCls = "rounded-2xl border border-slate-200 bg-white";
+export const cardCls = "rounded-card border border-line bg-surface shadow-card";

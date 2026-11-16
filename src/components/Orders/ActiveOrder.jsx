@@ -11,11 +11,11 @@ export default function ActiveOrder() {
     <section>
       {/* Title + status pill */}
       <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <h2 className="flex items-center gap-3 text-2xl font-extrabold text-slate-900">
-          <span className="size-3 rounded-full bg-orange-500" />
+        <h2 className="flex items-center gap-3 text-2xl font-extrabold text-ink">
+          <span className="size-3 rounded-full bg-primary" />
           Live Delivery in Progress
         </h2>
-        <span className="flex w-fit items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-4 py-1.5 text-xs font-semibold text-emerald-700">
+        <span className="flex w-fit items-center gap-2 rounded-full border border-tertiary/20 bg-tertiary/10 px-4 py-1.5 text-xs font-semibold text-tertiary">
           <Clock className="size-4" />
           On Schedule ● {o.arriving}
         </span>
@@ -23,30 +23,30 @@ export default function ActiveOrder() {
 
       <div className={`${cardCls} overflow-hidden`}>
         {/* Top strip */}
-        <div className="flex flex-col gap-3 border-b border-slate-200 bg-orange-50/50 p-5 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-3 border-b border-line bg-primary/5 p-5 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-4">
-            <div className="grid size-12 place-items-center rounded-xl bg-white text-orange-500 shadow-sm">
+            <div className="grid size-12 place-items-center rounded-xl bg-surface text-primary shadow-sm">
               <Pizza className="size-6" />
             </div>
             <div>
-              <h3 className="flex flex-wrap items-center gap-2 font-bold text-slate-900">
+              <h3 className="flex flex-wrap items-center gap-2 font-bold text-ink">
                 {o.restaurant}
-                <span className="rounded bg-amber-100 px-2 py-0.5 text-[10px] font-semibold text-amber-800">
+                <span className="rounded bg-secondary/20 px-2 py-0.5 text-[10px] font-semibold text-ink">
                   {o.tag}
                 </span>
               </h3>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-muted">
                 Order {o.number} • Placed at {o.placedAt} •{" "}
-                <span className="text-red-600">Estimated Delivery: {o.eta}</span>
+                <span className="text-primary">Estimated Delivery: {o.eta}</span>
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2">
-            <Bike className="size-5 text-orange-500" />
+          <div className="flex items-center gap-2 rounded-lg border border-line bg-surface px-4 py-2">
+            <Bike className="size-5 text-primary" />
             <div className="text-xs">
-              <p className="text-[10px] text-slate-500">Delivery Partner</p>
-              <p className="font-semibold text-slate-900">{o.partner}</p>
+              <p className="text-[10px] text-muted">Delivery Partner</p>
+              <p className="font-semibold text-ink">{o.partner}</p>
             </div>
           </div>
         </div>
@@ -54,49 +54,49 @@ export default function ActiveOrder() {
         <OrderStepper steps={o.steps} />
 
         {/* Map + items */}
-        <div className="grid border-t border-slate-200 lg:grid-cols-[1.15fr_1fr]">
+        <div className="grid border-t border-line lg:grid-cols-[1.15fr_1fr]">
           {/* Left: map + courier */}
           <div className="p-5">
             <div className="mb-3 flex items-center justify-between">
-              <h3 className="flex items-center gap-2 font-bold text-slate-900">
-                <Navigation className="size-5 text-red-500" /> Courier Live Route
+              <h3 className="flex items-center gap-2 font-bold text-ink">
+                <Navigation className="size-5 text-primary" /> Courier Live Route
               </h3>
-              <span className="rounded-full bg-emerald-50 px-3 py-1 text-[11px] font-semibold text-emerald-700">
+              <span className="rounded-full bg-tertiary/10 px-3 py-1 text-[11px] font-semibold text-tertiary">
                 Speed: {o.speed} • {o.distance}
               </span>
             </div>
 
             <LiveMap destination={o.destination} />
 
-            <div className="mt-4 flex flex-col gap-3 rounded-xl border border-slate-200 bg-slate-50 p-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="mt-4 flex flex-col gap-3 rounded-xl border border-line bg-page p-4 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex items-center gap-3">
                 <div className="relative">
-                  <div className="grid size-12 place-items-center rounded-full bg-slate-800 text-sm font-bold text-white">
+                  <div className="grid size-12 place-items-center rounded-full bg-ink text-surface text-sm font-bold">
                     {o.courier.initials}
                   </div>
-                  <span className="absolute -bottom-0.5 -right-0.5 grid size-4 place-items-center rounded-full bg-emerald-600 text-white">
+                  <span className="absolute -bottom-0.5 -right-0.5 grid size-4 place-items-center rounded-full bg-tertiary text-white">
                     <Check className="size-3" />
                   </span>
                 </div>
                 <div>
-                  <p className="flex items-center gap-2 font-bold text-slate-900">
+                  <p className="flex items-center gap-2 font-bold text-ink">
                     {o.courier.name}
-                    <span className="flex items-center gap-0.5 text-xs font-semibold text-slate-700">
-                      <Star className="size-3 fill-amber-400 text-amber-400" />
+                    <span className="flex items-center gap-0.5 text-xs font-semibold text-muted">
+                      <Star className="size-3 fill-secondary text-secondary" />
                       {o.courier.rating}
                     </span>
                   </p>
-                  <p className="text-[11px] text-slate-500">
+                  <p className="text-[11px] text-muted">
                     {o.courier.vehicle} • Plate {o.courier.plate}
                   </p>
                 </div>
               </div>
 
               <div className="flex gap-2">
-                <button className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-800 hover:bg-slate-50">
-                  <Phone className="size-3.5 text-red-500" /> Call Driver
+                <button className="flex items-center gap-2 rounded-lg border border-line bg-surface px-4 py-2 text-xs font-semibold text-ink hover:bg-page">
+                  <Phone className="size-3.5 text-primary" /> Call Driver
                 </button>
-                <button className="flex items-center gap-2 rounded-lg bg-orange-500 px-4 py-2 text-xs font-bold text-white hover:bg-orange-600">
+                <button className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-xs font-bold text-white hover:bg-primary-hover">
                   <MessageSquare className="size-3.5" /> Send Message
                 </button>
               </div>
@@ -104,10 +104,10 @@ export default function ActiveOrder() {
           </div>
 
           {/* Right: items + totals */}
-          <div className="border-t border-slate-200 p-5 lg:border-l lg:border-t-0">
+          <div className="border-t border-line p-5 lg:border-l lg:border-t-0">
             <div className="mb-4 flex items-center justify-between">
-              <h3 className="font-bold text-slate-900">Order Items ({o.items.length})</h3>
-              <span className="text-xs text-slate-500">Subtotal: {money(o.subtotal)}</span>
+              <h3 className="font-bold text-ink">Order Items ({o.items.length})</h3>
+              <span className="text-xs text-muted">Subtotal: {money(o.subtotal)}</span>
             </div>
 
             <div className="space-y-4">
@@ -116,22 +116,22 @@ export default function ActiveOrder() {
                   <img
                     src={it.img}
                     alt={it.name}
-                    className="size-12 shrink-0 rounded-lg bg-slate-100 object-cover"
+                    className="size-12 shrink-0 rounded-lg bg-page object-cover"
                   />
                   <div className="min-w-0 flex-1">
-                    <p className="text-sm font-semibold text-slate-900">{it.name}</p>
-                    <p className="text-[11px] text-slate-500">{it.desc}</p>
-                    <p className="text-[11px] font-semibold text-red-500">Qty: {it.qty}</p>
+                    <p className="text-sm font-semibold text-ink">{it.name}</p>
+                    <p className="text-[11px] text-muted">{it.desc}</p>
+                    <p className="text-[11px] font-semibold text-primary">Qty: {it.qty}</p>
                   </div>
-                  <p className="text-sm font-bold text-slate-900">{money(it.price)}</p>
+                  <p className="text-sm font-bold text-ink">{money(it.price)}</p>
                 </div>
               ))}
             </div>
 
-            <div className="mt-5 space-y-1.5 border-t border-slate-100 pt-4 text-[11px] text-slate-500">
+            <div className="mt-5 space-y-1.5 border-t border-line pt-4 text-[11px] text-muted">
               <div className="flex justify-between">
                 <span>Delivery Fee (SwiftExpress)</span>
-                <span className="font-semibold text-emerald-600">FREE (Promo applied)</span>
+                <span className="font-semibold text-tertiary">FREE (Promo applied)</span>
               </div>
               <div className="flex justify-between">
                 <span>Taxes &amp; Service Fees</span>
@@ -139,16 +139,16 @@ export default function ActiveOrder() {
               </div>
             </div>
 
-            <div className="mt-3 flex items-center justify-between border-t border-slate-100 pt-3">
-              <span className="font-bold text-slate-900">Total Paid</span>
-              <span className="text-xl font-extrabold text-red-600">{money(o.total)}</span>
+            <div className="mt-3 flex items-center justify-between border-t border-line pt-3">
+              <span className="font-bold text-ink">Total Paid</span>
+              <span className="text-xl font-extrabold text-primary">{money(o.total)}</span>
             </div>
 
             <div className="mt-3 flex items-center justify-between text-[11px] font-medium">
-              <button className="flex items-center gap-1.5 text-slate-600 hover:text-slate-900">
+              <button className="flex items-center gap-1.5 text-muted hover:text-ink">
                 <FileText className="size-3.5" /> View Full Receipt
               </button>
-              <button className="flex items-center gap-1.5 text-red-500 hover:underline">
+              <button className="flex items-center gap-1.5 text-primary hover:underline">
                 <HelpCircle className="size-3.5" /> Order Help &amp; Issues
               </button>
             </div>
@@ -156,12 +156,12 @@ export default function ActiveOrder() {
         </div>
 
         {/* Delivery note */}
-        <div className="flex items-center justify-between gap-3 border-t border-slate-200 bg-red-50/40 px-5 py-3 text-[11px] text-slate-500">
+        <div className="flex items-center justify-between gap-3 border-t border-line bg-primary/5 px-5 py-3 text-[11px] text-muted">
           <p className="flex items-center gap-2">
-            <Info className="size-4 text-red-400" />
+            <Info className="size-4 text-primary" />
             Delivery Note: "{o.note}"
           </p>
-          <button className="shrink-0 font-semibold text-red-500 hover:underline">
+          <button className="shrink-0 font-semibold text-primary hover:underline">
             Edit Instructions
           </button>
         </div>

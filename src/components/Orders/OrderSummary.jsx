@@ -121,7 +121,7 @@ const total = subtotal + deliveryFee + tax - discount;
             <span>${tax.toFixed(2)}</span>
           </div>
 
-          <div className="flex justify-between text-green-700">
+          <div className="flex justify-between text-tertiary">
             <span className="flex items-center gap-2">
               <Tag className="size-4" />
               Discount
@@ -160,7 +160,7 @@ const total = subtotal + deliveryFee + tax - discount;
           </div>
         </div>
 
-        <span className="rounded-full bg-green-50 px-3 py-1.5 text-xs font-semibold text-green-700">
+        <span className="rounded-full bg-tertiary/10 px-3 py-1.5 text-xs font-semibold text-tertiary">
           Paid
         </span>
       </div>
