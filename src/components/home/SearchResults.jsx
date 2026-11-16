@@ -198,7 +198,7 @@ export default function SearchResults({
                         </span>
 
                         <span className="text-muted">
-                          {dish.kcal} kcal
+                          {dish.kcal ? `${dish.kcal} kcal` : ""}
                         </span>
                       </div>
                     </div>
