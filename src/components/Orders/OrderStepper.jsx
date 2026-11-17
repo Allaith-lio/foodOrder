@@ -11,7 +11,7 @@ export default function OrderStepper({ steps }) {
             {!last && (
               <span
                 className={`absolute left-1/2 top-5 h-0.5 w-full ${
-                  s.state === "done" ? "bg-orange-500" : "bg-slate-200"
+                  s.state === "done" ? "bg-primary" : "bg-line"
                 }`}
               />
             )}
@@ -19,7 +19,7 @@ export default function OrderStepper({ steps }) {
             {i > 0 && (
               <span
                 className={`absolute right-1/2 top-5 h-0.5 w-1/2 ${
-                  steps[i - 1].state === "done" ? "bg-orange-500" : "bg-slate-200"
+                  steps[i - 1].state === "done" ? "bg-primary" : "bg-line"
                 }`}
               />
             )}
@@ -27,10 +27,10 @@ export default function OrderStepper({ steps }) {
             <span
               className={`relative z-10 grid size-10 place-items-center rounded-full ${
                 s.state === "done"
-                  ? "bg-emerald-800 text-white"
+                  ? "bg-tertiary text-white"
                   : s.state === "active"
-                  ? "bg-orange-500 text-white ring-4 ring-orange-200"
-                  : "bg-slate-100 text-slate-500"
+                  ? "bg-primary text-white ring-4 ring-primary/20"
+                  : "bg-page text-muted"
               }`}
             >
               {s.state === "done" ? (
@@ -44,15 +44,15 @@ export default function OrderStepper({ steps }) {
 
             <p
               className={`mt-2 text-xs font-semibold ${
-                s.state === "active" ? "text-orange-600" : "text-slate-800"
+                s.state === "active" ? "text-primary" : "text-ink"
               }`}
             >
               {s.label}
-              {s.state === "active" && <span className="ml-1 text-orange-500">●</span>}
+              {s.state === "active" && <span className="ml-1 text-primary">●</span>}
             </p>
             <p
               className={`text-[11px] ${
-                s.state === "active" ? "text-orange-500" : "text-slate-500"
+                s.state === "active" ? "text-primary" : "text-muted"
               }`}
             >
               {s.time}

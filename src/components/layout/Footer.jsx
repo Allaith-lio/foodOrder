@@ -1,39 +1,42 @@
 import { Link } from "react-router-dom";
-import { Utensils, Globe, Share2, Mail } from "lucide-react";
+import { Globe, Share2, Mail } from "lucide-react";
 import { footerLinks } from "../../data/homeData";
+import Logo from "../common/Logo";
 
 export default function Footer() {
   return (
-    <footer className="bg-stone-900 text-stone-300 ">
+    <footer className="border-t border-line bg-surface/95 text-ink">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr_1fr]">
           {/* Brand */}
           <div>
-            <Link to="/" className="flex items-center gap-2">
-              <Utensils className="size-5 text-primary" />
-              <span className="text-lg font-extrabold text-white">Sofra</span>
+            <Link to="/" className="flex items-center gap-2.5">
+              <Logo className="text-2xl" />
             </Link>
-            <p className="mt-4 max-w-xs text-sm leading-relaxed text-stone-400">
+            <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted">
               Delivering culinary craft from the neighborhood's finest spots to your kitchen table in minutes. Fast,
               transparent, and always satisfying.
             </p>
-            <div className="mt-4 flex gap-3 text-stone-400">
-              <Globe className="size-5 cursor-pointer hover:text-white" />
-              <Share2 className="size-5 cursor-pointer hover:text-white" />
-              <Mail className="size-5 cursor-pointer hover:text-white" />
+            <div className="mt-4 flex gap-3 text-muted">
+              <Globe className="size-5 cursor-pointer hover:text-primary" />
+              <Share2 className="size-5 cursor-pointer hover:text-primary" />
+              <Mail className="size-5 cursor-pointer hover:text-primary" />
             </div>
           </div>
 
           {/* Link columns */}
           {footerLinks.map((col) => (
             <div key={col.title}>
-              <h3 className="!text-base text-white">{col.title}</h3>
+              <h3 className="!text-base text-ink">{col.title}</h3>
               <ul className="mt-4 space-y-2 text-sm">
                 {col.links.map((link) => (
-                  <li key={link}>
-                    <a href="#" className="text-stone-400 transition-colors hover:text-white">
-                      {link}
-                    </a>
+                  <li key={link.label}>
+                    <Link
+                      to={link.to}
+                      className="text-muted transition-colors hover:text-primary"
+                    >
+                      {link.label}
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -42,7 +45,7 @@ export default function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="mt-10 flex flex-wrap items-center justify-between gap-3 border-t border-stone-700 pt-6 text-xs text-stone-400">
+        <div className="mt-10 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-6 text-xs text-muted">
           <p>© 2026 Sofra. All rights reserved.</p>
           <div className="flex gap-5">
             <span>English (US)</span>

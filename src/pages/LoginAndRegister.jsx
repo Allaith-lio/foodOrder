@@ -8,11 +8,14 @@ import {
   EyeOff,
   LockKeyhole,
   Mail,
+  Moon,
   Sparkles,
+  Sun,
   Truck,
-  Utensils,
   UserRound,
 } from "lucide-react";
+import { useTheme } from "../hooks/ThemeContext";
+import Logo from "../components/common/Logo";
 
 const foodPhoto =
   "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1400&q=85";
@@ -23,6 +26,7 @@ export default function LoginAndRegister() {
   const isLogin = location.pathname === "/login";
   const [showPassword, setShowPassword] = useState(false);
   const [message, setMessage] = useState("");
+  const { isDarkMode, toggleTheme } = useTheme();
 
   function switchMode() {
     setMessage("");
@@ -38,31 +42,43 @@ export default function LoginAndRegister() {
   }
 
   return (
-    <div className="grid grid-cols-1 min-h-[680px] w-full max-w-6xl overflow-hidden rounded-[28px] bg-white shadow-[0_24px_80px_rgba(47,37,24,0.12)] lg:grid-cols-[0.92fr_1.08fr]">
+    <div className="grid grid-cols-1 min-h-[680px] w-full max-w-6xl overflow-hidden rounded-[28px] bg-surface shadow-card lg:grid-cols-[0.92fr_1.08fr]">
       <section className="order-2 flex flex-col px-6 py-8 sm:px-10 sm:py-10 lg:order-1 lg:px-14 lg:py-12">
-        <Link
-          to="/"
-          className="inline-flex w-fit items-center gap-2.5 no-underline"
-        >
-          <span className="flex size-10 items-center justify-center rounded-xl bg-primary text-white shadow-sm">
-            <Utensils className="size-5" aria-hidden="true" />
-          </span>
-          <span className="text-xl font-extrabold tracking-tight text-slate-900">
-            Crave<span className="text-primary">Dash</span>
-          </span>
-        </Link>
+        <div className="flex items-center justify-between gap-3">
+          <Link
+            to="/"
+            className="inline-flex w-fit items-center gap-2.5 no-underline"
+          >
+            <Logo />
+          </Link>
+
+          <button
+            type="button"
+            onClick={toggleTheme}
+            aria-label={
+              isDarkMode ? "Switch to light mode" : "Switch to dark mode"
+            }
+            className="flex size-11 shrink-0 cursor-pointer items-center justify-center rounded-xl border border-line bg-surface text-ink transition-colors hover:border-primary/30 hover:bg-primary/5 hover:text-primary"
+          >
+            {isDarkMode ? (
+              <Sun className="size-[21px] text-amber-400" strokeWidth={1.9} />
+            ) : (
+              <Moon className="size-[21px]" strokeWidth={1.9} />
+            )}
+          </button>
+        </div>
 
         <div className="my-auto py-10">
-          <div className="mb-5 inline-flex items-center gap-2 rounded-full bg-[#fff3e8] px-3 py-1.5 text-xs font-semibold text-[#bd5b22]">
+          <div className="mb-5 inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1.5 text-xs font-semibold text-primary">
             <Sparkles className="size-3.5" aria-hidden="true" />
             {isLogin
               ? "Welcome back to the good stuff"
               : "Your next favorite meal awaits"}
           </div>
-          <h1 className="!text-3xl !leading-tight text-slate-900 sm:!text-4xl">
+          <h1 className="!text-3xl !leading-tight text-ink sm:!text-4xl">
             {isLogin ? "Good to see you again." : "Create your account."}
           </h1>
-          <p className="mt-3 max-w-sm text-sm leading-6 text-slate-500">
+          <p className="mt-3 max-w-sm text-sm leading-6 text-muted">
             {isLogin
               ? "Sign in to pick up where you left off and get your favorites delivered."
               : "Join CraveDash for delicious discoveries and doorstep delivery."}
@@ -71,12 +87,12 @@ export default function LoginAndRegister() {
           <form className="mt-8 space-y-4" onSubmit={handleSubmit}>
             {!isLogin && (
               <label className="block">
-                <span className="mb-2 block text-sm font-semibold text-slate-700">
+                <span className="mb-2 block text-sm font-semibold text-ink">
                   Username
                 </span>
-                <span className="flex h-12 items-center gap-3 rounded-xl border border-slate-200 px-3.5 transition focus-within:border-primary focus-within:ring-4 focus-within:ring-primary/10">
+                <span className="flex h-12 items-center gap-3 rounded-xl border border-line px-3.5 transition focus-within:border-primary focus-within:ring-4 focus-within:ring-primary/10">
                   <UserRound
-                    className="size-[18px] shrink-0 text-slate-400"
+                    className="size-[18px] shrink-0 text-muted"
                     aria-hidden="true"
                   />
                   <input
@@ -85,19 +101,19 @@ export default function LoginAndRegister() {
                     autoComplete="username"
                     placeholder="How should we call you?"
                     required
-                    className="h-full min-w-0 flex-1 bg-transparent text-sm text-slate-800 outline-none placeholder:text-slate-400"
+                    className="h-full min-w-0 flex-1 bg-transparent text-sm text-ink outline-none placeholder:text-muted"
                   />
                 </span>
               </label>
             )}
 
             <label className="block">
-              <span className="mb-2 block text-sm font-semibold text-slate-700">
+              <span className="mb-2 block text-sm font-semibold text-ink">
                 Email address
               </span>
-              <span className="flex h-12 items-center gap-3 rounded-xl border border-slate-200 px-3.5 transition focus-within:border-primary focus-within:ring-4 focus-within:ring-primary/10">
+              <span className="flex h-12 items-center gap-3 rounded-xl border border-line px-3.5 transition focus-within:border-primary focus-within:ring-4 focus-within:ring-primary/10">
                 <Mail
-                  className="size-[18px] shrink-0 text-slate-400"
+                  className="size-[18px] shrink-0 text-muted"
                   aria-hidden="true"
                 />
                 <input
@@ -106,18 +122,18 @@ export default function LoginAndRegister() {
                   autoComplete="email"
                   placeholder="you@example.com"
                   required
-                  className="h-full min-w-0 flex-1 bg-transparent text-sm text-slate-800 outline-none placeholder:text-slate-400"
+                  className="h-full min-w-0 flex-1 bg-transparent text-sm text-ink outline-none placeholder:text-muted"
                 />
               </span>
             </label>
 
             <label className="block">
-              <span className="mb-2 block text-sm font-semibold text-slate-700">
+              <span className="mb-2 block text-sm font-semibold text-ink">
                 Password
               </span>
-              <span className="flex h-12 items-center gap-3 rounded-xl border border-slate-200 px-3.5 transition focus-within:border-primary focus-within:ring-4 focus-within:ring-primary/10">
+              <span className="flex h-12 items-center gap-3 rounded-xl border border-line px-3.5 transition focus-within:border-primary focus-within:ring-4 focus-within:ring-primary/10">
                 <LockKeyhole
-                  className="size-[18px] shrink-0 text-slate-400"
+                  className="size-[18px] shrink-0 text-muted"
                   aria-hidden="true"
                 />
                 <input
@@ -127,12 +143,12 @@ export default function LoginAndRegister() {
                   placeholder="Enter your password"
                   minLength={8}
                   required
-                  className="h-full min-w-0 flex-1 bg-transparent text-sm text-slate-800 outline-none placeholder:text-slate-400"
+                  className="h-full min-w-0 flex-1 bg-transparent text-sm text-ink outline-none placeholder:text-muted"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword((visible) => !visible)}
-                  className="rounded-md p-1 text-slate-400 transition hover:text-slate-700"
+                  className="rounded-md p-1 text-muted transition hover:text-ink"
                   aria-label={
                     showPassword ? "Hide password" : "Show password"
                   }
@@ -174,7 +190,7 @@ export default function LoginAndRegister() {
             )}
           </form>
 
-          <p className="mt-6 text-center text-sm text-slate-500">
+          <p className="mt-6 text-center text-sm text-muted">
             {isLogin ? "New to CraveDash?" : "Already have an account?"}{" "}
             <button
               type="button"
@@ -186,13 +202,13 @@ export default function LoginAndRegister() {
           </p>
         </div>
 
-        <p className="text-center text-xs text-slate-400">
+        <p className="text-center text-xs text-muted">
           By continuing, you agree to our{" "}
-          <a href="#terms" className="text-slate-500 underline">
+          <a href="#terms" className="text-muted underline">
             Terms
           </a>{" "}
           and{" "}
-          <a href="#privacy" className="text-slate-500 underline">
+          <a href="#privacy" className="text-muted underline">
             Privacy Policy
           </a>
           .

@@ -4,7 +4,7 @@ import Home from "./pages/Home";
 import LoginAndRegister from "./pages/LoginAndRegister";
 import Cart from "./pages/Cart";
 import MyOrders from "./pages/MyOrders";
-import Wishlist from "./Pages/Wishlist";
+import Wishlist from "./pages/Wishlist";
 import Dashboard from "./pages/vendor/Dashboard";
 import OrdersManagement from "./pages/vendor/OrdersManagement";
 import CustomersManagement from "./pages/vendor/CustomersManagement";
@@ -13,7 +13,9 @@ import MainLayout from "./layouts/MainLayout";
 import AuthLayout from "./layouts/AuthLayout";
 import VendorLayout from "./layouts/VendorLayout";
 import Restaurants from "./pages/Restaurants";
-import RestaurantsDetails from "./pages/RestaurantsDetalies";
+import RestaurantsDetails from "./pages/RestaurantsDetails";
+// import CheckoutPage from "./pages/CheckoutPage";
+import AboutUs from "./pages/AboutUs";
 
 export default function App() {
   return (
@@ -25,6 +27,8 @@ export default function App() {
         <Route path="/wishlist" element={<Wishlist />} />
         <Route path="/myCart" element={<Cart />} />
         <Route path="/myOrders" element={<MyOrders />} />
+        {/* <Route path="/checkout" element={<CheckoutPage />} /> */}
+        <Route path="/aboutUs" element={<AboutUs />} />
       </Route>
 
       <Route element={<AuthLayout />}>

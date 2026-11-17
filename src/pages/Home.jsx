@@ -9,10 +9,7 @@ import PopularDishes from "../components/home/PopularDishes";
 import AppBanner from "../components/home/AppBanner";
 import SearchResults from "../components/home/SearchResults";
 
-import {
-  dishes,
-  restaurants,
-} from "../data/homeData";
+import { dishes, restaurants } from "../data/catalog";
 import { ArrowUp } from "lucide-react";
 
 export default function Home() {
@@ -35,7 +32,7 @@ export default function Home() {
     return (
       normalize(dish.name).includes(search) ||
       normalize(dish.restaurant).includes(search) ||
-      normalize(dish.text).includes(search)
+      normalize(dish.description).includes(search)
     );
   });
 

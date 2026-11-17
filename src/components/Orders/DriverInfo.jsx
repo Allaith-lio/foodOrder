@@ -33,7 +33,7 @@ export default function DriverInfo() {
                 Michael Anderson
               </h4>
 
-              <ShieldCheck className="size-4 text-green-600" />
+              <ShieldCheck className="size-4 text-tertiary" />
             </div>
 
             <p className="mt-1 text-sm text-muted">
@@ -41,7 +41,7 @@ export default function DriverInfo() {
             </p>
 
             <div className="mt-2 flex items-center gap-1.5">
-              <Star className="size-4 fill-amber-400 text-amber-400" />
+              <Star className="size-4 fill-secondary text-secondary" />
               <span className="text-sm font-bold text-ink">
                 4.9
               </span>

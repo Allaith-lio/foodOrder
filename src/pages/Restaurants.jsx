@@ -11,7 +11,7 @@ import {
 	X,
 } from 'lucide-react';
 import RestaurantCard from '../components/common/RestaurantsCard';
-import { restaurants } from '../data/restaurantsData';
+import { restaurants } from '../data/catalog';
 import { useNavigate } from 'react-router-dom';
 import { useWishlist } from '../hooks/WishlistContext';
 
@@ -22,6 +22,7 @@ const cuisines = [
 	'Fast Food',
 	'Italian',
 	'Middle Eastern',
+	'Syrian',
 	'Asian',
 	'Mexican',
 	'Seafood',
@@ -35,6 +36,7 @@ const locations = [
 	'District 7',
 	'Al-Ziraa',
 	'Corniche',
+	'Latakia',
 ];
 
 // Shared look for the pill fields in the filter bar

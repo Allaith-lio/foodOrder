@@ -1,10 +1,10 @@
 import { useState } from "react";
-import OrdersHeader from "../components/Orders/OrdersHeader";
-import OrderTabs from "../components/Orders/OrderTabs";
-import ActiveOrder from "../components/Orders/ActiveOrder";
-import PastOrders from "../components/Orders/PastOrders";
-import CancelledOrders from "../components/Orders/CancelledOrders";
-import SupportSection from "../components/Orders/SupportSection";
+import OrdersHeader from "../components/orders/OrdersHeader";
+import OrderTabs from "../components/orders/OrderTabs";
+import ActiveOrder from "../components/orders/ActiveOrder";
+import PastOrders from "../components/orders/PastOrders";
+import CancelledOrders from "../components/orders/CancelledOrders";
+import SupportSection from "../components/orders/SupportSection";
 
 export default function MyOrders() {
   const [activeTab, setActiveTab] = useState("active");

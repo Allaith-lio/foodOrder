@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import {
-  Utensils,
   MapPin,
   ChevronDown,
   ShoppingBag,
@@ -16,12 +15,13 @@ import { useTheme } from "../../hooks/ThemeContext";
 import { useShoppingCart } from "../../hooks/CartContext";
 import { useWishlist } from "../../hooks/WishlistContext";
 import { useDeliveryLocation } from "../../hooks/useDeliveryLocation";
+import Logo from "../common/Logo";
 import LocationModal from "./LocationModal";
 
 const navLinks = [
   { label: "Explore", to: "/", end: true },
-  { label: "Offers", to: "/offers" },
   { label: "Restaurants", to: "/restaurants" },
+  { label: "About Us", to: "/aboutUs" },
   { label: "My Orders", to: "/myOrders" },
 ];
 
@@ -72,16 +72,10 @@ export default function Header() {
   return (
     <>
       <header className="sticky top-0 z-50 border-b border-line bg-surface/95 backdrop-blur-md">
-        <div className="mx-auto flex h-[76px] max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+        <div className="flex h-[76px] w-full items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
           {/* Logo */}
           <Link to="/" className="flex shrink-0 items-center gap-2.5">
-            <div className="flex size-10 items-center justify-center rounded-xl bg-primary text-white">
-              <Utensils className="size-5" strokeWidth={2.5} />
-            </div>
-
-            <span className="font-logo text-2xl font-extrabold tracking-tight text-ink">
-              Sofra<span className="text-primary">.</span>
-            </span>
+            <Logo className="text-2xl" />
           </Link>
 
           {/* Desktop navigation */}
@@ -191,7 +185,7 @@ export default function Header() {
             aria-label="Mobile navigation"
             className="border-t border-line bg-surface px-4 py-4 md:hidden"
           >
-            <div className="mx-auto flex max-w-7xl flex-col gap-1">
+            <div className="flex w-full flex-col gap-1">
               {/* Location */}
               <button
                 type="button"

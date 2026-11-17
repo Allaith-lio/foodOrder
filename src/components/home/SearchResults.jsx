@@ -134,7 +134,7 @@ export default function SearchResults({
 
                       <div className="mt-3 flex items-center gap-1.5 text-xs text-muted">
                         <MapPin className="size-3.5 text-primary" />
-                        {restaurant.distance || restaurant.deliveryFee || "Delivery available"}
+                        {restaurant.distance || restaurant.deliveryFeeText || "Delivery available"}
                       </div>
                     </div>
                   </article>
@@ -185,7 +185,7 @@ export default function SearchResults({
                       </p>
 
                       <p className="mt-3 line-clamp-2 text-xs leading-relaxed text-muted">
-                        {dish.text}
+                        {dish.description}
                       </p>
 
                       <div className="mt-4 flex items-center justify-between border-t border-line pt-3 text-xs">
@@ -198,7 +198,7 @@ export default function SearchResults({
                         </span>
 
                         <span className="text-muted">
-                          {dish.kcal} kcal
+                          {dish.kcal ? `${dish.kcal} kcal` : ""}
                         </span>
                       </div>
                     </div>

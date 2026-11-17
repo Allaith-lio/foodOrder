@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Star, Clock, Truck, Heart } from 'lucide-react';
-import { restaurants, restaurantFilters } from '../../data/homeData';
+import { getFeaturedRestaurants } from '../../data/catalog';
+import { restaurantFilters } from '../../data/homeData';
 import SectionHeading from './SectionHeading';
 import FoodImage from '../ui/FoodImage';
 import { useWishlist } from '../../hooks/WishlistContext';
@@ -17,7 +18,7 @@ function applyFilter(list, filter) {
 export default function TopRestaurants() {
 	const [filter, setFilter] = useState('All');
 	const { isInWishlist, toggleWishlist } = useWishlist();
-	const visible = applyFilter(restaurants, filter);
+	const visible = applyFilter(getFeaturedRestaurants(), filter);
 
 	return (
 		<section
@@ -98,7 +99,7 @@ export default function TopRestaurants() {
 											<Truck className="size-3.5" /> Free Delivery
 										</span>
 									) : (
-										<span className="text-muted">{r.deliveryFee}</span>
+										<span className="text-muted">{r.deliveryFeeText}</span>
 									)}
 									<span className="text-muted">{r.distance}</span>
 								</div>

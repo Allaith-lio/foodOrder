@@ -1,7 +1,7 @@
 import { Heart, ShoppingBag } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 
-import { restaurants } from '../data/restaurantsData';
+import { restaurants } from '../data/catalog';
 import RestaurantCard from '../components/common/RestaurantsCard';
 import { useWishlist } from '../hooks/WishlistContext';
 
@@ -17,7 +17,7 @@ const Wishlist = () => {
 	const handleViewDetails = () => navigate('/restaurants/taza-041');
 
 	return (
-		<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+		<div className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8">
 			<section className="mx-auto max-w-2xl py-8 text-center md:py-20">
 				<h1 className="mt-6">
 					My{' '}
