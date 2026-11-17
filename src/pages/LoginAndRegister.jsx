@@ -6,16 +6,16 @@ import {
   Clock3,
   Eye,
   EyeOff,
-  LockKeyhole,
-  Mail,
   Moon,
   Sparkles,
   Sun,
   Truck,
-  UserRound,
 } from "lucide-react";
 import { useTheme } from "../hooks/ThemeContext";
 import Logo from "../components/common/Logo";
+import { loginFields, registerFields } from "../data/formFields";
+import { useForm } from "../hooks/useForm";
+import FormFields from "../components/common/FormFields";
 
 const foodPhoto =
   "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1400&q=85";
@@ -27,6 +27,32 @@ export default function LoginAndRegister() {
   const [showPassword, setShowPassword] = useState(false);
   const [message, setMessage] = useState("");
   const { isDarkMode, toggleTheme } = useTheme();
+  const baseFields = isLogin ? loginFields : registerFields;
+  const fields = {
+    ...baseFields,
+    password: {
+      ...baseFields.password,
+      type: showPassword ? "text" : "password",
+    },
+  };
+  const { values, errors, handleChange, handleBlur, validateAll } =
+    useForm(fields);
+
+  const passwordTrailing = (name) =>
+    name === "password" ? (
+      <button
+        type="button"
+        onClick={() => setShowPassword((visible) => !visible)}
+        className="rounded-md p-1 text-muted transition hover:text-ink"
+        aria-label={showPassword ? "Hide password" : "Show password"}
+      >
+        {showPassword ? (
+          <EyeOff className="size-[18px]" aria-hidden="true" />
+        ) : (
+          <Eye className="size-[18px]" aria-hidden="true" />
+        )}
+      </button>
+    ) : null;
 
   function switchMode() {
     setMessage("");
@@ -36,6 +62,11 @@ export default function LoginAndRegister() {
 
   function handleSubmit(event) {
     event.preventDefault();
+    const nextErrors = validateAll();
+    if (Object.keys(nextErrors).length > 0) {
+      setMessage("Please fix the highlighted fields.");
+      return;
+    }
     setMessage(
       "Authentication isn't connected yet. Your form is ready for account setup.",
     );
@@ -85,82 +116,14 @@ export default function LoginAndRegister() {
           </p>
 
           <form className="mt-8 space-y-4" onSubmit={handleSubmit}>
-            {!isLogin && (
-              <label className="block">
-                <span className="mb-2 block text-sm font-semibold text-ink">
-                  Username
-                </span>
-                <span className="flex h-12 items-center gap-3 rounded-xl border border-line px-3.5 transition focus-within:border-primary focus-within:ring-4 focus-within:ring-primary/10">
-                  <UserRound
-                    className="size-[18px] shrink-0 text-muted"
-                    aria-hidden="true"
-                  />
-                  <input
-                    name="username"
-                    type="text"
-                    autoComplete="username"
-                    placeholder="How should we call you?"
-                    required
-                    className="h-full min-w-0 flex-1 bg-transparent text-sm text-ink outline-none placeholder:text-muted"
-                  />
-                </span>
-              </label>
-            )}
-
-            <label className="block">
-              <span className="mb-2 block text-sm font-semibold text-ink">
-                Email address
-              </span>
-              <span className="flex h-12 items-center gap-3 rounded-xl border border-line px-3.5 transition focus-within:border-primary focus-within:ring-4 focus-within:ring-primary/10">
-                <Mail
-                  className="size-[18px] shrink-0 text-muted"
-                  aria-hidden="true"
-                />
-                <input
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  placeholder="you@example.com"
-                  required
-                  className="h-full min-w-0 flex-1 bg-transparent text-sm text-ink outline-none placeholder:text-muted"
-                />
-              </span>
-            </label>
-
-            <label className="block">
-              <span className="mb-2 block text-sm font-semibold text-ink">
-                Password
-              </span>
-              <span className="flex h-12 items-center gap-3 rounded-xl border border-line px-3.5 transition focus-within:border-primary focus-within:ring-4 focus-within:ring-primary/10">
-                <LockKeyhole
-                  className="size-[18px] shrink-0 text-muted"
-                  aria-hidden="true"
-                />
-                <input
-                  name="password"
-                  type={showPassword ? "text" : "password"}
-                  autoComplete={isLogin ? "current-password" : "new-password"}
-                  placeholder="Enter your password"
-                  minLength={8}
-                  required
-                  className="h-full min-w-0 flex-1 bg-transparent text-sm text-ink outline-none placeholder:text-muted"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword((visible) => !visible)}
-                  className="rounded-md p-1 text-muted transition hover:text-ink"
-                  aria-label={
-                    showPassword ? "Hide password" : "Show password"
-                  }
-                >
-                  {showPassword ? (
-                    <EyeOff className="size-[18px]" aria-hidden="true" />
-                  ) : (
-                    <Eye className="size-[18px]" aria-hidden="true" />
-                  )}
-                </button>
-              </span>
-            </label>
+            <FormFields
+              fields={fields}
+              values={values}
+              errors={errors}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              trailingFor={passwordTrailing}
+            />
 
             {isLogin && (
               <div className="flex justify-end pt-0.5">

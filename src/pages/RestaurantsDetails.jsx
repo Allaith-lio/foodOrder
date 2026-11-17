@@ -1,4 +1,4 @@
-import { useRef } from "react";
+﻿import { useRef } from "react";
 import { divIcon } from "leaflet";
 import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
 import {
@@ -164,7 +164,7 @@ function RatingCard() {
   return (
     <section
       id="reviews"
-      className="scroll-mt-24 rounded-[1.4rem] border border-line bg-white p-5 shadow-card sm:p-6"
+      className="scroll-mt-24 rounded-[1.4rem] border border-line bg-surface p-5 shadow-card sm:p-6"
     >
       <div className="flex items-center justify-between">
         <div>
@@ -178,7 +178,7 @@ function RatingCard() {
         </span>
       </div>
 
-      <div className="mt-5 flex items-center gap-4 rounded-xl bg-[#fff9ed] p-4">
+      <div className="mt-5 flex items-center gap-4 rounded-xl bg-secondary/10 p-4">
         <span className="text-4xl font-extrabold tracking-tight text-ink">
           4.9
         </span>
@@ -202,7 +202,7 @@ function RatingCard() {
             className="flex items-center gap-2 text-[10px] text-muted"
           >
             <span className="w-7">{bar.stars} star</span>
-            <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-[#f0eee9]">
+            <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-line">
               <span
                 className={`block h-full rounded-full bg-amber-400 ${bar.width}`}
               />
@@ -215,7 +215,7 @@ function RatingCard() {
           (item) => (
             <span
               key={item}
-              className="flex items-center gap-1 rounded-full bg-[#f3f7f1] px-2.5 py-1 text-[10px] font-semibold text-[#52704e]"
+              className="flex items-center gap-1 rounded-full bg-tertiary/10 px-2.5 py-1 text-[10px] font-semibold text-tertiary"
             >
               <Check className="size-3" /> {item}
             </span>
@@ -236,7 +236,7 @@ function LocationCard() {
   return (
     <section
       id="location"
-      className="scroll-mt-24 overflow-hidden rounded-[1.4rem] border border-line bg-white shadow-card"
+      className="scroll-mt-24 overflow-hidden rounded-[1.4rem] border border-line bg-surface shadow-card"
     >
       <div className="flex items-center justify-between px-5 pb-3 pt-5 sm:px-6">
         <div>
@@ -245,7 +245,7 @@ function LocationCard() {
           </p>
           <h2 className="mt-1.5 !text-xl">Come find us</h2>
         </div>
-        <span className="flex size-9 items-center justify-center rounded-full bg-[#eef5ed] text-[#52704e]">
+        <span className="flex size-9 items-center justify-center rounded-full bg-tertiary/10 text-tertiary">
           <MapPin className="size-4" />
         </span>
       </div>
@@ -261,7 +261,7 @@ function LocationCard() {
           <span className="flex items-center gap-1.5 text-muted">
             <Clock3 className="size-3.5 text-primary" /> Open daily
           </span>
-          <span className="font-semibold">10:00 AM – 11:00 PM</span>
+          <span className="font-semibold">10:00 AM â€“ 11:00 PM</span>
         </div>
       </div>
     </section>
@@ -272,7 +272,7 @@ function TeamCard() {
   return (
     <section
       id="team"
-      className="scroll-mt-24 rounded-[1.4rem] border border-line bg-white p-5 shadow-card sm:p-6"
+      className="scroll-mt-24 rounded-[1.4rem] border border-line bg-surface p-5 shadow-card sm:p-6"
     >
       <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-primary">
         A little about us
@@ -283,8 +283,8 @@ function TeamCard() {
         door, our crew makes every order with care.
       </p>
       <div className="mt-4 grid grid-cols-2 gap-2">
-        <div className="rounded-xl bg-[#fbf5ef] p-3">
-          <span className="flex size-8 items-center justify-center rounded-full bg-[#f2dfd1] text-[#965e3b]">
+        <div className="rounded-xl bg-primary/10 p-3">
+          <span className="flex size-8 items-center justify-center rounded-full bg-primary/15 text-primary">
             <UtensilsCrossed className="size-4" />
           </span>
           <p className="mt-2 text-xs font-bold">Kitchen crew</p>
@@ -292,8 +292,8 @@ function TeamCard() {
             Fresh, made to order
           </p>
         </div>
-        <div className="rounded-xl bg-[#f2f7f1] p-3">
-          <span className="flex size-8 items-center justify-center rounded-full bg-[#dcebd8] text-[#52704e]">
+        <div className="rounded-xl bg-tertiary/10 p-3">
+          <span className="flex size-8 items-center justify-center rounded-full bg-tertiary/15 text-tertiary">
             <Bike className="size-4" />
           </span>
           <p className="mt-2 text-xs font-bold">Delivery crew</p>
@@ -302,7 +302,7 @@ function TeamCard() {
           </p>
         </div>
       </div>
-      <p className="mt-4 flex items-center gap-1.5 text-[11px] font-semibold text-[#52704e]">
+      <p className="mt-4 flex items-center gap-1.5 text-[11px] font-semibold text-tertiary">
         <ShieldCheck className="size-3.5" /> Always prepared with care
       </p>
     </section>
@@ -321,7 +321,7 @@ function PopularSlider() {
       <button
         type="button"
         onClick={() => scroll(-1)}
-        className="flex size-8 items-center justify-center rounded-full border border-line bg-white text-muted transition hover:border-primary hover:text-primary"
+        className="flex size-8 items-center justify-center rounded-full border border-line bg-surface text-muted transition hover:border-primary hover:text-primary"
         aria-label="Previous popular dishes"
       >
         <ArrowLeft className="size-3.5" />
@@ -329,7 +329,7 @@ function PopularSlider() {
       <button
         type="button"
         onClick={() => scroll(1)}
-        className="flex size-8 items-center justify-center rounded-full border border-line bg-white text-muted transition hover:border-primary hover:text-primary"
+        className="flex size-8 items-center justify-center rounded-full border border-line bg-surface text-muted transition hover:border-primary hover:text-primary"
         aria-label="Next popular dishes"
       >
         <ArrowRight className="size-3.5" />
@@ -353,15 +353,15 @@ function PopularSlider() {
         {favoriteDishes.map((dish) => (
           <article
             key={dish.name}
-            className="w-[min(74vw,15.5rem)] shrink-0 snap-start overflow-hidden rounded-2xl border border-line bg-white"
+            className="w-[min(74vw,15.5rem)] shrink-0 snap-start overflow-hidden rounded-2xl border border-line bg-surface"
           >
-            <div className="relative h-36 overflow-hidden bg-[#f0e9df]">
+            <div className="relative h-36 overflow-hidden bg-page">
               <FoodImage
                 src={dish.image}
                 alt={dish.name}
                 className="size-full transition duration-500 hover:scale-105"
               />
-              <span className="absolute bottom-2 left-2 rounded-full bg-white/95 px-2.5 py-1 text-[9px] font-bold text-ink shadow-sm">
+              <span className="absolute bottom-2 left-2 rounded-full bg-surface/95 px-2.5 py-1 text-[9px] font-bold text-ink shadow-sm">
                 {dish.label}
               </span>
             </div>
@@ -393,7 +393,7 @@ function MenuSection() {
       <SectionHeading
         eyebrow="Fresh from our kitchen"
         title="Something for everyone"
-        description="Take a look around. We’ll make it fresh when you order."
+        description="Take a look around. Weâ€™ll make it fresh when you order."
       />
       <nav
         aria-label="Menu categories"
@@ -403,7 +403,7 @@ function MenuSection() {
           <a
             key={category.id}
             href={`#${category.id}`}
-            className="shrink-0 rounded-full border border-line bg-white px-3.5 py-2 text-[11px] font-bold text-muted no-underline transition hover:border-primary hover:text-primary"
+            className="shrink-0 rounded-full border border-line bg-surface px-3.5 py-2 text-[11px] font-bold text-muted no-underline transition hover:border-primary hover:text-primary"
           >
             {category.name}
           </a>
@@ -414,10 +414,10 @@ function MenuSection() {
           <section
             key={category.id}
             id={category.id}
-            className="scroll-mt-28 rounded-2xl border border-line bg-white p-4 sm:p-5"
+            className="scroll-mt-28 rounded-2xl border border-line bg-surface p-4 sm:p-5"
           >
             <div className="mb-2 flex items-center gap-2 border-b border-line pb-3">
-              <span className="flex size-8 items-center justify-center rounded-full bg-[#fff2e9] text-primary">
+              <span className="flex size-8 items-center justify-center rounded-full bg-primary/10 text-primary">
                 <UtensilsCrossed className="size-3.5" />
               </span>
               <h3 className="!text-base">{category.name}</h3>
@@ -432,7 +432,7 @@ function MenuSection() {
                     <div className="flex flex-wrap items-center gap-2">
                       <h4 className="text-xs font-bold">{item.name}</h4>
                       {item.badge && (
-                        <span className="rounded-full bg-[#fff2e9] px-2 py-0.5 text-[8px] font-extrabold tracking-wide text-primary">
+                        <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[8px] font-extrabold tracking-wide text-primary">
                           {item.badge}
                         </span>
                       )}
@@ -473,17 +473,17 @@ function GuestStories() {
       <SectionHeading
         eyebrow="Kind words from our guests"
         title="A little love from Latakia"
-        description="We’re grateful for every neighbor who shares a meal with us."
+        description="Weâ€™re grateful for every neighbor who shares a meal with us."
       />
       <div className="grid gap-3 sm:grid-cols-2">
         {reviews.map((review) => (
           <article
             key={review.name}
-            className="rounded-2xl border border-line bg-white p-4"
+            className="rounded-2xl border border-line bg-surface p-4"
           >
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-2.5">
-                <span className="flex size-9 items-center justify-center rounded-full bg-[#f7e9df] text-[10px] font-extrabold text-[#79452d]">
+                <span className="flex size-9 items-center justify-center rounded-full bg-primary/10 text-[10px] font-extrabold text-primary">
                   {review.initials}
                 </span>
                 <div>
@@ -507,7 +507,7 @@ function GuestStories() {
 
 export default function RestaurantsDetails() {
   return (
-    <main className="min-h-screen bg-[#f8f6f1] pb-10">
+    <main className="min-h-screen bg-page pb-10">
       <div className="mx-auto max-w-7xl px-4 pb-8 pt-5 sm:px-6 lg:pt-7">
         <nav
           aria-label="Breadcrumb"
@@ -528,18 +528,18 @@ export default function RestaurantsDetails() {
 
         <div className="grid grid-cols-1 items-start gap-5 lg:grid-cols-[minmax(0,1.55fr)_minmax(19rem,0.82fr)] lg:gap-6">
           <div className="min-w-0 space-y-7 sm:space-y-8">
-            <section className="overflow-hidden rounded-[1.6rem] border border-[#eee5d9] bg-white shadow-card">
+            <section className="overflow-hidden rounded-[1.6rem] border border-line bg-surface shadow-card">
               <div className="grid md:grid-cols-[1.04fr_0.96fr]">
                 <div className="flex flex-col justify-center p-5 sm:p-7 lg:p-8">
-                  <span className="mb-4 flex w-fit items-center gap-1.5 rounded-full bg-[#eef5ed] px-3 py-1.5 text-[10px] font-extrabold tracking-wide text-[#52704e]">
-                    <span className="size-1.5 rounded-full bg-[#69a86a]" /> OPEN
+                  <span className="mb-4 flex w-fit items-center gap-1.5 rounded-full bg-tertiary/10 px-3 py-1.5 text-[10px] font-extrabold tracking-wide text-tertiary">
+                    <span className="size-1.5 rounded-full bg-tertiary" /> OPEN
                     NOW
-                    <span className="font-medium text-[#7b8c76]">
-                      · until 11 PM
+                    <span className="font-medium text-muted">
+                      آ· until 11 PM
                     </span>
                   </span>
 
-                  <h1 className="mt-2 !text-4xl !leading-[1.05] text-[#29382c] sm:!text-5xl">
+                  <h1 className="mt-2 !text-4xl !leading-[1.05] text-ink sm:!text-5xl">
                     Taza 041
                   </h1>
                   <p className="mt-3 text-sm leading-6 text-muted">
@@ -548,13 +548,13 @@ export default function RestaurantsDetails() {
                     something worth sharing.
                   </p>
                   <div className="mt-5 flex flex-wrap gap-2">
-                    <span className="rounded-full bg-[#f8f4ec] px-3 py-1.5 text-[10px] font-semibold text-[#6f675b]">
+                    <span className="rounded-full bg-page px-3 py-1.5 text-[10px] font-semibold text-muted">
                       Syrian favorites
                     </span>
-                    <span className="rounded-full bg-[#f8f4ec] px-3 py-1.5 text-[10px] font-semibold text-[#6f675b]">
+                    <span className="rounded-full bg-page px-3 py-1.5 text-[10px] font-semibold text-muted">
                       Made fresh
                     </span>
-                    <span className="rounded-full bg-[#f8f4ec] px-3 py-1.5 text-[10px] font-semibold text-[#6f675b]">
+                    <span className="rounded-full bg-page px-3 py-1.5 text-[10px] font-semibold text-muted">
                       Family friendly
                     </span>
                   </div>
@@ -565,20 +565,20 @@ export default function RestaurantsDetails() {
                     Explore our menu <ArrowDown className="size-4" />
                   </a>
                 </div>
-                <div className="relative min-h-60 overflow-hidden bg-[#e8d8c8] md:min-h-[330px]">
+                <div className="relative min-h-60 overflow-hidden bg-page md:min-h-[330px]">
                   <FoodPhoto
                     image="photo-1555939594-58d7cb561ad1"
                     alt="A table filled with freshly grilled food"
                     className="absolute inset-0 size-full object-cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent" />
-                  <span className="absolute bottom-4 left-4 flex items-center gap-2 rounded-full border border-white/40 bg-white/90 px-3 py-2 text-[10px] font-bold text-[#3d493b] shadow-sm backdrop-blur">
+                  <span className="absolute bottom-4 left-4 flex items-center gap-2 rounded-full border border-white/40 bg-surface/90 px-3 py-2 text-[10px] font-bold text-ink shadow-sm backdrop-blur">
                     <Sparkles className="size-3.5 text-primary" /> Good food,
                     good mood
                   </span>
                 </div>
               </div>
-              <div className="grid grid-cols-3 border-t border-line bg-[#fffdfa]">
+              <div className="grid grid-cols-3 border-t border-line bg-surface">
                 <div className="px-3 py-3.5 text-center sm:px-5">
                   <p className="flex items-center justify-center gap-1 text-xs font-extrabold">
                     <Star className="size-3.5 fill-amber-400 text-amber-400" />{" "}
@@ -590,7 +590,7 @@ export default function RestaurantsDetails() {
                 </div>
                 <div className="border-x border-line px-3 py-3.5 text-center sm:px-5">
                   <p className="flex items-center justify-center gap-1 text-xs font-extrabold">
-                    <Clock3 className="size-3.5 text-primary" /> 20–35 min
+                    <Clock3 className="size-3.5 text-primary" /> 20â€“35 min
                   </p>
                   <p className="mt-1 text-[9px] text-muted sm:text-[10px]">
                     Estimated delivery
@@ -607,13 +607,13 @@ export default function RestaurantsDetails() {
               </div>
             </section>
 
-            <section className="relative overflow-hidden rounded-[1.4rem] bg-[#2e4838] p-5 text-white shadow-card sm:flex sm:items-center sm:justify-between sm:gap-4 sm:px-6">
+            <section className="relative overflow-hidden rounded-[1.4rem] bg-tertiary p-5 text-white shadow-card sm:flex sm:items-center sm:justify-between sm:gap-4 sm:px-6">
               <div
                 className="absolute -right-7 -top-14 size-36 rounded-full border-[20px] border-white/[0.06]"
                 aria-hidden="true"
               />
               <div className="relative">
-                <p className="flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-[0.17em] text-[#c8dfb8]">
+                <p className="flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-[0.17em] text-white/80">
                   <Sparkles className="size-3.5" /> A little something extra
                 </p>
                 <h2 className="mt-2 !text-xl text-white">
@@ -624,7 +624,7 @@ export default function RestaurantsDetails() {
                 </p>
               </div>
               <div className="relative mt-4 flex items-center gap-3 sm:mt-0 sm:shrink-0">
-                <span className="rounded-lg border border-dashed border-white/45 bg-white/10 px-4 py-2 font-mono text-base font-bold tracking-[0.16em]">
+                <span className="rounded-lg border border-dashed border-white/45 bg-surface/10 px-4 py-2 font-mono text-base font-bold tracking-[0.16em]">
                   TAZA15
                 </span>
                 <span className="text-[10px] leading-4 text-white/70">
@@ -644,19 +644,19 @@ export default function RestaurantsDetails() {
             <RatingCard />
             <LocationCard />
             <TeamCard />
-            <div className="flex items-center gap-3 rounded-2xl border border-[#e7e9de] bg-[#eef3e9] p-4">
-              <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-white text-[#67815c]">
+            <div className="flex items-center gap-3 rounded-2xl border border-line bg-tertiary/10 p-4">
+              <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-surface text-tertiary">
                 <MessageCircle className="size-4" />
               </span>
-              <p className="text-[11px] leading-5 text-[#52644b]">
-                <strong className="block text-xs">We’re happy to help</strong>
+              <p className="text-[11px] leading-5 text-muted">
+                <strong className="block text-xs">Weâ€™re happy to help</strong>
                 Questions about your order? Our team is here for you.
               </p>
             </div>
           </aside>
         </div>
 
-        <div className="mt-8 flex flex-col items-center justify-between gap-3 rounded-2xl bg-[#253b32] px-5 py-5 text-center text-white sm:flex-row sm:px-7 sm:text-left">
+        <div className="mt-8 flex flex-col items-center justify-between gap-3 rounded-2xl bg-tertiary px-5 py-5 text-center text-white sm:flex-row sm:px-7 sm:text-left">
           <div>
             <p className="text-sm font-bold">Hungry? Your table is waiting.</p>
             <p className="mt-1 text-xs text-white/65">
@@ -665,7 +665,7 @@ export default function RestaurantsDetails() {
           </div>
           <a
             href="#menu"
-            className="btn !rounded-full !bg-white !px-5 !text-[#253b32] hover:!bg-white/90"
+            className="btn !rounded-full !bg-white !px-5 !text-tertiary hover:!bg-white/90"
           >
             Browse the menu <ArrowRight className="size-4" />
           </a>

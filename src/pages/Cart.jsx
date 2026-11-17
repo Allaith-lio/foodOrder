@@ -2,11 +2,14 @@ import { useState } from "react";
 
 import {
   Store, Star, Trash2, Minus, Plus, Tag, CheckCircle2, X, Info, MapPin,
-  Home, Briefcase, PlusCircle, Search, AlignLeft, Phone, Truck, Bike, Zap,
+  Home, Briefcase, PlusCircle, Truck, Bike, Zap,
   Wallet, CreditCard, Smartphone, Banknote, Lock, ShieldCheck, Headphones,
-  Clock, ArrowRight, ShoppingBag,
+  Clock, ArrowRight,
 } from "lucide-react";
 import { useShoppingCart } from "../hooks/CartContext";
+import { checkoutFields } from "../data/formFields";
+import { useForm } from "../hooks/useForm";
+import FormFields from "../components/common/FormFields";
 
 
 const couriers = [
@@ -102,6 +105,12 @@ export default function Cart() {
   const [address, setAddress] = useState("home");
   const [courierId, setCourierId] = useState("swift");
   const [paymentId, setPaymentId] = useState("card");
+  const checkout = useForm(checkoutFields, {
+    streetAddress: "742 Evergreen Terrace, Apt 4B, Springfield, OR",
+    aptFloor: "Apt 4B / Call #402",
+    deliveryNotes: "Leave at door, ring bell",
+    phone: "0933123456",
+  });
 
 
   const applyPromo = () => {
@@ -279,52 +288,21 @@ const itemCount = cartCount;
               </button>
             </div>
 
-            <div className="grid gap-4 sm:grid-cols-[1fr_200px]">
-              <label className="block">
-                <span className="text-xs font-semibold text-slate-700">Street Address</span>
-                <div className="mt-1 flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3">
-                  <Search className="size-4 text-slate-500" />
-                  <input
-                    defaultValue="742 Evergreen Terrace, Apt 4B, Springfield, OR"
-                    className="w-full bg-transparent py-3 text-sm outline-none"
-                  />
-                </div>
-              </label>
-              <label className="block">
-                <span className="text-xs font-semibold text-slate-700">Apt / Floor / Gate Code</span>
-                <input
-                  defaultValue="Apt 4B / Call #402"
-                  className="mt-1 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-3 text-sm outline-none"
-                />
-              </label>
-            </div>
-
-            <div className="mt-4 grid gap-4 sm:grid-cols-[1fr_1fr]">
-              <label className="block">
-                <span className="text-xs font-semibold text-slate-700">Delivery Notes for Courier</span>
-                <div className="mt-1 flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3">
-                  <AlignLeft className="size-4 text-slate-500" />
-                  <input
-                    defaultValue="Leave at door, ring bell"
-                    className="w-full bg-transparent py-3 text-sm outline-none"
-                  />
-                </div>
-              </label>
-              <div>
-                <span className="text-xs font-semibold text-slate-700">Phone Number Verification</span>
-                <div className="mt-1 flex gap-2">
-                  <div className="flex flex-1 items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3">
-                    <Phone className="size-4 text-slate-500" />
-                    <input
-                      defaultValue="+1 (555) 893-4122"
-                      className="w-full bg-transparent py-3 text-sm outline-none"
-                    />
-                  </div>
-                  <span className="flex items-center gap-1 rounded-xl border border-green-300 bg-green-50 px-3 text-xs font-semibold text-green-700">
-                    <CheckCircle2 className="size-4" /> Verified
-                  </span>
-                </div>
-              </div>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <FormFields
+                fields={checkoutFields}
+                values={checkout.values}
+                errors={checkout.errors}
+                onChange={checkout.handleChange}
+                onBlur={checkout.handleBlur}
+                trailingFor={(name) =>
+                  name === "phone" ? (
+                    <span className="flex items-center gap-1 rounded-xl border border-green-300 bg-green-50 px-3 text-xs font-semibold text-green-700">
+                      <CheckCircle2 className="size-4" /> Verified
+                    </span>
+                  ) : null
+                }
+              />
             </div>
           </section>
 

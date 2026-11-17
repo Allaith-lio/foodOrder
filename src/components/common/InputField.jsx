@@ -23,6 +23,7 @@ function InputField({
   multiline = false,
   rows = 5,
   icon,
+  trailing,
 }) {
   const Icon = icon || icons[name];
   const Field = multiline ? "textarea" : "input";
@@ -67,6 +68,7 @@ function InputField({
           aria-invalid={!!error}
           aria-describedby={error ? `${name}-error` : undefined}
         />
+        {trailing}
       </span>
       {error && (
         <span id={`${name}-error`} role="alert" className="text-xs font-medium text-red-500">

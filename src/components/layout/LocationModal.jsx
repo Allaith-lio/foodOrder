@@ -6,6 +6,9 @@ import {
   Check,
   X,
 } from "lucide-react";
+import { locationFields } from "../../data/formFields";
+import { useForm } from "../../hooks/useForm";
+import FormFields from "../common/FormFields";
 
 const cities = [
   "Latakia",
@@ -37,6 +40,11 @@ const gpsMessages = {
 // the draft starts from the saved location every time.
 export default function LocationModal({ location, onSave, onClose }) {
   const [draft, setDraft] = useState({ ...location });
+  const addressForm = useForm(locationFields, {
+    area: location.area ?? "",
+    street: location.street ?? "",
+    details: location.details ?? "",
+  });
   const [gpsLoading, setGpsLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -86,7 +94,7 @@ export default function LocationModal({ location, onSave, onClose }) {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    const hasAddress = draft.city && draft.area;
+    const hasAddress = draft.city && addressForm.values.area;
     const hasGPS = draft.gps && draft.latitude !== null;
 
     if (!hasAddress && !hasGPS) {
@@ -94,7 +102,12 @@ export default function LocationModal({ location, onSave, onClose }) {
       return;
     }
 
-    onSave(draft);
+    onSave({
+      ...draft,
+      area: addressForm.values.area,
+      street: addressForm.values.street,
+      details: addressForm.values.details,
+    });
   };
 
   return (
@@ -198,48 +211,13 @@ export default function LocationModal({ location, onSave, onClose }) {
               </select>
             </div>
 
-            <div className="space-y-1.5">
-              <label htmlFor="loc-area" className={labelClass}>
-                Area / Neighborhood
-              </label>
-              <input
-                id="loc-area"
-                type="text"
-                value={draft.area}
-                onChange={updateField("area")}
-                placeholder="e.g. Raml Al Shamali"
-                className={inputClass}
-              />
-            </div>
-
-            <div className="space-y-1.5">
-              <label htmlFor="loc-street" className={labelClass}>
-                Street / Building
-              </label>
-              <input
-                id="loc-street"
-                type="text"
-                value={draft.street}
-                onChange={updateField("street")}
-                placeholder="Street name or building number"
-                className={inputClass}
-              />
-            </div>
-
-            <div className="space-y-1.5">
-              <label htmlFor="loc-details" className={labelClass}>
-                Additional Details
-                <span className="ml-1 font-normal text-muted">(Optional)</span>
-              </label>
-              <input
-                id="loc-details"
-                type="text"
-                value={draft.details}
-                onChange={updateField("details")}
-                placeholder="Floor, apartment, nearby landmark..."
-                className={inputClass}
-              />
-            </div>
+            <FormFields
+              fields={locationFields}
+              values={addressForm.values}
+              errors={addressForm.errors}
+              onChange={addressForm.handleChange}
+              onBlur={addressForm.handleBlur}
+            />
           </div>
 
           {error && (

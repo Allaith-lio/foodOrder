@@ -23,8 +23,8 @@ import {
   Zap,
 } from "lucide-react";
 
-// Change the brand name here only (the Header uses "Sofra")
-const BRAND = "Sofra";
+
+const BRAND = "CraveDash";
 
 const heroStats = [
   { value: "1,200+", label: "Partner Kitchens", color: "text-primary-text" },
