@@ -1,37 +1,13 @@
 import { useState } from "react";
+
 import {
   Store, Star, Trash2, Minus, Plus, Tag, CheckCircle2, X, Info, MapPin,
   Home, Briefcase, PlusCircle, Search, AlignLeft, Phone, Truck, Bike, Zap,
   Wallet, CreditCard, Smartphone, Banknote, Lock, ShieldCheck, Headphones,
   Clock, ArrowRight, ShoppingBag,
 } from "lucide-react";
+import { useShoppingCart } from "../hooks/CartContext";
 
-const initialItems = [
-  {
-    id: 1,
-    name: "Truffle Burrata Pizza",
-    description: "Extra Cheese, Thin Crust, Wild Truffle Glaze",
-    quantity: 1,
-    price: 24.0,
-    image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=300",
-  },
-  {
-    id: 2,
-    name: "Crispy Calamari",
-    description: "Spicy Marinara Dip, Lemon Wedges",
-    quantity: 1,
-    price: 14.5,
-    image: "https://images.unsplash.com/photo-1604909052743-94e838986d24?w=300",
-  },
-  {
-    id: 3,
-    name: "San Pellegrino Sparkling",
-    description: "500ml Bottle, Chilled with Lime",
-    quantity: 1,
-    price: 4.5,
-    image: "https://images.unsplash.com/photo-1523362628745-0c100150b504?w=300",
-  },
-];
 
 const couriers = [
   {
@@ -111,22 +87,22 @@ function SectionTitle({ Icon, title, right, subtitle }) {
 }
 
 export default function Cart() {
-  const [items, setItems] = useState(initialItems);
-  const [promoInput, setPromoInput] = useState("");
+    const {
+    cartItems,
+    cartCount,
+    subTotal,
+    increaseCartQuantity,
+    decreaseCartQuantity,
+    RemoveItemFromCart,
+    clearCart,
+  } = useShoppingCart();
+ const [promoInput, setPromoInput] = useState("");
   const [promoCode, setPromoCode] = useState("SAVE15");
   const [promoError, setPromoError] = useState("");
   const [address, setAddress] = useState("home");
   const [courierId, setCourierId] = useState("swift");
   const [paymentId, setPaymentId] = useState("card");
 
-  const updateQty = (id, delta) =>
-    setItems((prev) =>
-      prev.map((i) =>
-        i.id === id ? { ...i, quantity: Math.max(1, i.quantity + delta) } : i
-      )
-    );
-
-  const removeItem = (id) => setItems((prev) => prev.filter((i) => i.id !== id));
 
   const applyPromo = () => {
     const code = promoInput.trim().toUpperCase();
@@ -138,22 +114,22 @@ export default function Cart() {
       setPromoError("Invalid promo code");
     }
   };
-
-  const subtotal = items.reduce((t, i) => t + i.price * i.quantity, 0);
-  const discountRate = promoCode ? PROMO_CODES[promoCode] : 0;
-  const discount = subtotal * discountRate;
+const itemCount = cartCount;
+    const discountRate = promoCode ? PROMO_CODES[promoCode] : 0;
+  const discount = subTotal * discountRate;
 
   const courier = couriers.find((c) => c.id === courierId);
+
   const deliveryFee =
-    courier.freeOver && subtotal >= courier.freeOver
+    courier.freeOver && subTotal >= courier.freeOver
       ? 0
       : courier.freeOver
-      ? 2.49
-      : courier.fee;
+        ? 2.49
+        : courier.fee;
 
-  const taxes = subtotal * TAX_RATE;
-  const total = subtotal - discount + deliveryFee + taxes;
-  const itemCount = items.reduce((n, i) => n + i.quantity, 0);
+  const taxes = subTotal * TAX_RATE;
+  const total = subTotal - discount + deliveryFee + taxes;
+
 
   return (
     <main className="mx-auto min-h-screen max-w-7xl bg-white px-4 py-8 sm:px-6 lg:px-8">
@@ -195,20 +171,20 @@ export default function Cart() {
                 </div>
               </div>
               <button
-                onClick={() => setItems([])}
+                onClick={clearCart}
                 className="flex items-center gap-1 text-xs font-medium text-orange-600 hover:underline"
               >
                 <Trash2 className="size-3.5" /> Clear Cart
               </button>
             </div>
 
-            {items.length === 0 ? (
+            {cartItems.length === 0 ? (
               <p className="py-10 text-center text-sm text-slate-500">
                 Your cart is empty.
               </p>
             ) : (
               <div className="divide-y divide-slate-100">
-                {items.map((item) => (
+                {cartItems.map((item) => (
                   <div key={item.id} className="flex gap-4 py-5">
                     <img
                       src={item.image}
@@ -216,7 +192,7 @@ export default function Cart() {
                       className="size-20 shrink-0 rounded-xl bg-slate-100 object-cover"
                     />
                     <div className="flex min-w-0 flex-1 flex-col justify-between">
-                      <div className="flex items-start justify-between gap-3">
+                      <div className="flex cartItems-start justify-between gap-3">
                         <div className="min-w-0">
                           <h3 className="font-bold text-slate-900">{item.name}</h3>
                           <p className="mt-0.5 text-xs text-slate-500">
@@ -234,7 +210,7 @@ export default function Cart() {
                       <div className="mt-2 flex justify-end">
                         <div className="flex items-center gap-1 rounded-full border border-slate-200 bg-slate-50 px-2 py-1">
                           <button
-                            onClick={() => updateQty(item.id, -1)}
+                            onClick={() => decreaseCartQuantity(item.id)}
                             className="grid size-6 place-items-center rounded-full text-slate-600 hover:bg-white"
                             aria-label="Decrease quantity"
                           >
@@ -244,14 +220,14 @@ export default function Cart() {
                             {item.quantity}
                           </span>
                           <button
-                            onClick={() => updateQty(item.id, 1)}
+                            onClick={() => increaseCartQuantity(item.id)}
                             className="grid size-6 place-items-center rounded-full text-slate-600 hover:bg-white"
                             aria-label="Increase quantity"
                           >
                             <Plus className="size-3.5" />
                           </button>
                           <button
-                            onClick={() => removeItem(item.id)}
+                            onClick={() => RemoveItemFromCart(item.id)}
                             className="ml-1 grid size-6 place-items-center rounded-full text-slate-400 hover:text-red-600"
                             aria-label="Remove item"
                           >
@@ -367,7 +343,7 @@ export default function Cart() {
             <div className="grid gap-4 md:grid-cols-3">
               {couriers.map((c) => {
                 const selected = courierId === c.id;
-                const free = c.freeOver && subtotal >= c.freeOver;
+                const free = c.freeOver && subTotal >= c.freeOver;
                 const fee = free ? 0 : c.freeOver ? 2.49 : c.fee;
                 return (
                   <button
@@ -511,7 +487,7 @@ export default function Cart() {
             <div className="mt-5 space-y-3 text-sm text-slate-600">
               <div className="flex justify-between">
                 <span>Item Subtotal</span>
-                <span className="text-base font-semibold text-slate-900">{money(subtotal)}</span>
+                <span className="text-base font-semibold text-slate-900">{money(subTotal)}</span>
               </div>
               {promoCode && (
                 <div className="flex justify-between font-medium text-green-700">
@@ -546,7 +522,7 @@ export default function Cart() {
             </div>
 
             <button
-              disabled={items.length === 0}
+              disabled={cartItems.length === 0}
               className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-orange-500 py-3.5 font-bold text-white transition hover:bg-orange-600 disabled:cursor-not-allowed disabled:opacity-50"
             >
               Place Order &amp; Pay ({money(total)}) <ArrowRight className="size-5" />
