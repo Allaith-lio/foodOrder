@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import {
   MapPin,
@@ -15,6 +15,7 @@ import { useTheme } from "../../hooks/ThemeContext";
 import { useShoppingCart } from "../../hooks/CartContext";
 import { useWishlist } from "../../hooks/WishlistContext";
 import { useDeliveryLocation } from "../../hooks/useDeliveryLocation";
+import { getCurrentUser } from "../../services/dashboardService";
 import Logo from "../common/Logo";
 import LocationModal from "./LocationModal";
 
@@ -57,6 +58,13 @@ export default function Header() {
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [showLocation, setShowLocation] = useState(false);
+  const [user, setUser] = useState(() => getCurrentUser());
+
+  useEffect(() => {
+    const syncUser = () => setUser(getCurrentUser());
+    window.addEventListener("authchange", syncUser);
+    return () => window.removeEventListener("authchange", syncUser);
+  }, []);
 
   const closeMenu = () => setMenuOpen(false);
 
@@ -117,14 +125,34 @@ export default function Header() {
               <ChevronDown className="size-4 shrink-0 text-muted" />
             </button>
 
-            {/* Sign in (desktop) */}
-            <Link
-              to="/login"
-              className="hidden items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-ink transition-colors hover:bg-page sm:flex"
-            >
-              <UserRound className="size-4" />
-              <span>Sign In</span>
-            </Link>
+            {/* Account (desktop) */}
+            {user ? (
+              <Link
+                to="/profile"
+                aria-label={`Open ${user.name}'s profile`}
+                className="hidden items-center gap-2 rounded-xl py-1 pl-1 pr-3 transition-colors hover:bg-page sm:flex"
+              >
+                <img
+                  src={
+                    user.avatar ||
+                    "https://cdn-icons-png.flaticon.com/512/149/149071.png"
+                  }
+                  alt=""
+                  className="size-9 rounded-full object-cover ring-2 ring-primary/30"
+                />
+                <span className="max-w-28 truncate text-sm font-semibold text-ink">
+                  {user.name}
+                </span>
+              </Link>
+            ) : (
+              <Link
+                to="/login"
+                className="hidden items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-ink transition-colors hover:bg-page sm:flex"
+              >
+                <UserRound className="size-4" />
+                <span>Sign In</span>
+              </Link>
+            )}
 
             {/* Theme toggle (on mobile it lives inside the menu) */}
             <button
@@ -252,15 +280,30 @@ export default function Header() {
                 <span>{isDarkMode ? "Light mode" : "Dark mode"}</span>
               </button>
 
-              {/* Sign in */}
-              <Link
-                to="/login"
-                onClick={closeMenu}
-                className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold text-primary transition-colors hover:bg-primary/5"
-              >
-                <UserRound className="size-4" />
-                Sign In
-              </Link>
+              {/* Account */}
+              {user ? (
+                <Link
+                  to="/profile"
+                  onClick={closeMenu}
+                  className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold text-primary transition-colors hover:bg-primary/5"
+                >
+                  <img
+                    src={user.avatar || "https://cdn-icons-png.flaticon.com/512/149/149071.png"}
+                    alt=""
+                    className="size-7 rounded-full object-cover ring-2 ring-primary/30"
+                  />
+                  <span className="truncate">{user.name}</span>
+                </Link>
+              ) : (
+                <Link
+                  to="/login"
+                  onClick={closeMenu}
+                  className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold text-primary transition-colors hover:bg-primary/5"
+                >
+                  <UserRound className="size-4" />
+                  Sign In
+                </Link>
+              )}
             </div>
           </nav>
         )}

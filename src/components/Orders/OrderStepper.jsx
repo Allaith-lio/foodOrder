@@ -29,7 +29,7 @@ export default function OrderStepper({ steps }) {
                 s.state === "done"
                   ? "bg-tertiary text-white"
                   : s.state === "active"
-                  ? "bg-primary text-white ring-4 ring-primary/20"
+                  ? "bg-primary text-white ring-4 ring-primary/20 animate-pulse-ring"
                   : "bg-page text-muted"
               }`}
             >
@@ -48,7 +48,9 @@ export default function OrderStepper({ steps }) {
               }`}
             >
               {s.label}
-              {s.state === "active" && <span className="ml-1 text-primary">●</span>}
+              {s.state === "active" && (
+                <span className="ml-1 animate-pulse text-primary">●</span>
+              )}
             </p>
             <p
               className={`text-[11px] ${

@@ -22,6 +22,7 @@ import {
   UtensilsCrossed,
   Zap,
 } from "lucide-react";
+import Reveal from "../components/common/Reveal";
 
 
 const BRAND = "CraveDash";
@@ -261,6 +262,7 @@ export default function AboutUs() {
       </section>
 
       {/* 2. ORIGIN / TIMELINE */}
+      <Reveal>
       <section id="origin" className="scroll-mt-24 border-y border-line bg-surface py-20">
         <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-10">
           <SectionHeading
@@ -299,8 +301,10 @@ export default function AboutUs() {
           </div>
         </div>
       </section>
+      </Reveal>
 
       {/* 3. CORE VALUES */}
+      <Reveal delay={60}>
       <section className="py-20">
         <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-10">
           <SectionHeading
@@ -329,8 +333,10 @@ export default function AboutUs() {
           </div>
         </div>
       </section>
+      </Reveal>
 
       {/* 4. TEAM */}
+      <Reveal delay={60}>
       <section className="border-y border-line bg-surface py-20">
         <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-10">
           <SectionHeading
@@ -366,8 +372,10 @@ export default function AboutUs() {
           </div>
         </div>
       </section>
+      </Reveal>
 
       {/* 5. IMPACT */}
+      <Reveal delay={60}>
       <section id="impact" className="scroll-mt-24 bg-primary/5 py-16">
         <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-10">
           <div className="grid items-center gap-10 rounded-card border border-line bg-surface p-8 shadow-card lg:grid-cols-2 lg:p-12">
@@ -401,8 +409,10 @@ export default function AboutUs() {
           </div>
         </div>
       </section>
+      </Reveal>
 
       {/* 6. DUAL CTA */}
+      <Reveal delay={60}>
       <section className="py-20">
         <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-10">
           <div className="grid gap-6 md:grid-cols-2">
@@ -449,6 +459,7 @@ export default function AboutUs() {
           </div>
         </div>
       </section>
+      </Reveal>
     </>
   );
 }

@@ -1,19 +1,86 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Search, Eye, Inbox } from "lucide-react";
 import OrderStatusSelect from "../../components/vendor/OrderStatusSelect";
 import OrderDetails from "../../components/vendor/OrderDetails";
-import { orders as initialOrders, orderStatuses, money, orderTotal } from "../../data/ordersData";
+import { orderStatuses, money, orderTotal } from "../../data/ordersData";
+import {
+  getCustomerOrders,
+  updateOrderStatus,
+  CUSTOMER_TO_VENDOR_STATUS,
+  VENDOR_TO_CUSTOMER_STATUS,
+  ORDERS_KEY,
+} from "../../services/ordersService";
 
-// Vendor "Orders Management" page: see incoming orders and change their status.
+// Vendor "Orders Management" page: see incoming customer orders and move
+// them from processing -> shipping -> delivered. Reads the same
+// customerOrders store the customer checkout writes to, so status changes
+// show up live on the customer's tracking page.
+
+const fmtPlacedAt = (iso) => {
+  const date = new Date(iso);
+  const time = date.toLocaleTimeString([], {
+    hour: "numeric",
+    minute: "2-digit",
+  });
+  const today = new Date().toDateString() === date.toDateString();
+  return today ? `Today, ${time}` : `${date.toLocaleDateString()} ${time}`;
+};
+
+// Stored customer order -> vendor table row shape.
+const toVendorOrder = (order) => ({
+  _id: order.id,
+  id: order.number,
+  customer: order.customer || "Guest",
+  phone: order.phone || "—",
+  address: order.address || "—",
+  area: "",
+  placedAt: fmtPlacedAt(order.placedAt),
+  payment: order.payment || "Card",
+  courier: order.courier || "CraveDash Courier",
+  note: order.note || "",
+  status: CUSTOMER_TO_VENDOR_STATUS[order.status] || "processing",
+  deliveryFee: order.deliveryFee || 0,
+  items: (order.items || []).map((i) => ({
+    name: i.name,
+    qty: i.qty || i.quantity || 1,
+    price: Number(i.price || 0),
+  })),
+});
+
 export default function OrdersManagement() {
-  const [orders, setOrders] = useState(initialOrders);
+  const [customerOrders, setCustomerOrders] = useState(getCustomerOrders);
   const [tab, setTab] = useState("all"); // "all" or a status key
   const [query, setQuery] = useState("");
   const [selectedId, setSelectedId] = useState(null);
 
-  // Change the status of one order. Everything on the page updates right away.
+  useEffect(() => {
+    const reload = () => setCustomerOrders(getCustomerOrders());
+    const onStorage = (e) => {
+      if (e.key === ORDERS_KEY) reload();
+    };
+    window.addEventListener("orderschange", reload);
+    window.addEventListener("storage", onStorage);
+    return () => {
+      window.removeEventListener("orderschange", reload);
+      window.removeEventListener("storage", onStorage);
+    };
+  }, []);
+
+  // Cancelled orders have no vendor-side status, so they are hidden here.
+  const orders = useMemo(
+    () =>
+      customerOrders
+        .filter((o) => o.status !== "cancelled")
+        .map(toVendorOrder),
+    [customerOrders],
+  );
+
+  // Change the status of one order; the customer side updates via
+  // "orderschange" automatically.
   const changeStatus = (id, status) => {
-    setOrders((prev) => prev.map((o) => (o.id === id ? { ...o, status } : o)));
+    const order = orders.find((o) => o.id === id);
+    if (!order) return;
+    updateOrderStatus(order._id, VENDOR_TO_CUSTOMER_STATUS[status]);
   };
 
   const tabs = [
@@ -112,7 +179,7 @@ export default function OrdersManagement() {
                       <p className="text-xs text-muted">{order.area}</p>
                     </td>
                     <td className="hidden px-3 py-4 text-muted lg:table-cell">
-                      {order.items[0].qty}× {order.items[0].name}
+                      {order.items[0]?.qty}× {order.items[0]?.name}
                       {order.items.length > 1 && ` +${order.items.length - 1} more`}
                     </td>
                     <td className="px-3 py-4 font-bold">{money(orderTotal(order))}</td>
@@ -144,7 +211,9 @@ export default function OrdersManagement() {
               <Inbox className="size-6" />
             </span>
             <p className="font-bold">No orders found</p>
-            <p className="text-sm text-muted">Try another tab or a different search.</p>
+            <p className="text-sm text-muted">
+              Orders placed by customers will appear here in real time.
+            </p>
           </div>
         )}
 

@@ -19,13 +19,19 @@ function loadCart() {
     const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
     if (!Array.isArray(saved)) return [];
 
-    return saved.filter(
-      (item) =>
-        item &&
-        item.id != null &&
-        typeof item.price === "number" &&
-        item.quantity > 0,
-    );
+    return saved
+      .filter(
+        (item) =>
+          item &&
+          item.id != null &&
+          typeof item.price === "number" &&
+          item.quantity > 0,
+      )
+      .map((item) => ({
+        ...item,
+        // Older carts stored the picture as "img"; unify on "image".
+        image: item.image || item.img,
+      }));
   } catch {
     return [];
   }

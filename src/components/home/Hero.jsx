@@ -91,7 +91,7 @@ export default function Hero({ onSearch }) {
         </div>
 
         {/* Image side */}
-        <div className="relative mx-auto w-full max-w-md rounded-card border border-white/20 bg-white/10 p-1">
+        <div className="animate-float relative mx-auto w-full max-w-md rounded-card border border-white/20 bg-white/10 p-1">
           <FoodImage
             src="/images/hero-shawarma.jpg"
             alt="Syrian shawarma and fries"

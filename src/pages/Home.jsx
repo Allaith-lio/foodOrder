@@ -8,6 +8,7 @@ import TopRestaurants from "../components/home/TopRestaurants";
 import PopularDishes from "../components/home/PopularDishes";
 import AppBanner from "../components/home/AppBanner";
 import SearchResults from "../components/home/SearchResults";
+import Reveal from "../components/common/Reveal";
 
 import { dishes, restaurants } from "../data/catalog";
 import { ArrowUp } from "lucide-react";
@@ -71,13 +72,21 @@ export default function Home() {
         />
       ) : (
         <>
-          <SpecialOffers />
-          <TopRestaurants />
-          <PopularDishes />
+          <Reveal>
+            <SpecialOffers />
+          </Reveal>
+          <Reveal delay={80}>
+            <TopRestaurants />
+          </Reveal>
+          <Reveal delay={80}>
+            <PopularDishes />
+          </Reveal>
         </>
       )}
 
-      <AppBanner />
+      <Reveal delay={60}>
+        <AppBanner />
+      </Reveal>
       {showTop && (
         <button
           type="button"

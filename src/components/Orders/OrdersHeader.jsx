@@ -1,7 +1,7 @@
 
 import { Search } from "lucide-react";
 
-export default function OrdersHeader() {
+export default function OrdersHeader({ query = "", onQuery }) {
   return (
     <header>
       <nav className="mb-3 flex items-center gap-2 text-xs text-muted">
@@ -24,6 +24,8 @@ export default function OrdersHeader() {
           <Search className="size-4 text-primary" />
           <input
             placeholder="Search orders or dishes..."
+            value={query}
+            onChange={(e) => onQuery?.(e.target.value)}
             className="w-full bg-transparent py-2.5 text-xs outline-none placeholder:text-muted"
           />
         </label>

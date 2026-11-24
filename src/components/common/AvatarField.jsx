@@ -13,7 +13,7 @@ export default function AvatarField({ name, label, error, required, onChange }) 
     setLocalError("");
     if (!file) {
       setPreview("");
-      onChange({ target: { value: "" } });
+      onChange("");
       return;
     }
     if (!file.type.startsWith("image/")) {
@@ -28,7 +28,14 @@ export default function AvatarField({ name, label, error, required, onChange }) 
       if (old) URL.revokeObjectURL(old);
       return URL.createObjectURL(file);
     });
-    onChange({ target: { value: file.name } });
+    const reader = new FileReader();
+    reader.onload = () => {
+      onChange(typeof reader.result === "string" ? reader.result : "");
+    };
+    reader.onerror = () => {
+      setLocalError("Unable to read this image. Please try another file.");
+    };
+    reader.readAsDataURL(file);
   };
 
   const message = error || localError;

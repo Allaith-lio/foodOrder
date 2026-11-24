@@ -1,4 +1,7 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 import {
   Store, Star, Trash2, Minus, Plus, Tag, CheckCircle2, X, Info, MapPin,
@@ -8,9 +11,11 @@ import {
 } from "lucide-react";
 import { useShoppingCart } from "../hooks/CartContext";
 import { checkoutFields } from "../data/formFields";
-import { useForm } from "../hooks/useForm";
+import { checkoutSchema, normalizePhoneDigits } from "../utils/validators";
 import FormFields from "../components/common/FormFields";
-
+import Reveal from "../components/common/Reveal";
+import { placeOrder } from "../services/ordersService";
+import { getCurrentUser } from "../services/dashboardService";
 
 const couriers = [
   {
@@ -90,7 +95,7 @@ function SectionTitle({ Icon, title, right, subtitle }) {
 }
 
 export default function Cart() {
-    const {
+  const {
     cartItems,
     cartCount,
     subTotal,
@@ -99,19 +104,47 @@ export default function Cart() {
     RemoveItemFromCart,
     clearCart,
   } = useShoppingCart();
- const [promoInput, setPromoInput] = useState("");
+
+  const [promoInput, setPromoInput] = useState("");
   const [promoCode, setPromoCode] = useState("SAVE15");
   const [promoError, setPromoError] = useState("");
   const [address, setAddress] = useState("home");
   const [courierId, setCourierId] = useState("swift");
   const [paymentId, setPaymentId] = useState("card");
-  const checkout = useForm(checkoutFields, {
-    streetAddress: "742 Evergreen Terrace, Apt 4B, Springfield, OR",
-    aptFloor: "Apt 4B / Call #402",
-    deliveryNotes: "Leave at door, ring bell",
-    phone: "0933123456",
+  const [orderMessage, setOrderMessage] = useState("");
+  const navigate = useNavigate();
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(checkoutSchema),
+    mode: "onBlur",
+    defaultValues: {
+      streetAddress: "742 Evergreen Terrace, Apt 4B, Springfield, OR",
+      aptFloor: "Apt 4B / Call #402",
+      deliveryNotes: "Leave at door, ring bell",
+      phone: "0933123456",
+    },
   });
 
+  const registeredFields = Object.keys(checkoutFields).reduce((acc, name) => {
+    const reg = register(name);
+    if (name === "phone") {
+      acc[name] = {
+        ...reg,
+        onChange: (e) => {
+          const cleaned = normalizePhoneDigits(e.target.value);
+          setValue("phone", cleaned, { shouldValidate: true });
+        },
+      };
+    } else {
+      acc[name] = reg;
+    }
+    return acc;
+  }, {});
 
   const applyPromo = () => {
     const code = promoInput.trim().toUpperCase();
@@ -123,8 +156,9 @@ export default function Cart() {
       setPromoError("Invalid promo code");
     }
   };
-const itemCount = cartCount;
-    const discountRate = promoCode ? PROMO_CODES[promoCode] : 0;
+
+  const itemCount = cartCount;
+  const discountRate = promoCode ? PROMO_CODES[promoCode] : 0;
   const discount = subTotal * discountRate;
 
   const courier = couriers.find((c) => c.id === courierId);
@@ -139,6 +173,42 @@ const itemCount = cartCount;
   const taxes = subTotal * TAX_RATE;
   const total = subTotal - discount + deliveryFee + taxes;
 
+  function onOrderSubmit(data) {
+    if (cartItems.length === 0) return;
+
+    placeOrder({
+      restaurant:
+        cartItems.find((i) => i.restaurant)?.restaurant ||
+        "CraveDash Kitchen",
+      items: cartItems.map((i) => ({
+        name: i.name,
+        desc: i.description || "",
+        qty: i.quantity,
+        price: i.price,
+        img: i.image,
+      })),
+      subtotal: subTotal,
+      discount,
+      deliveryFee,
+      taxes,
+      total,
+      address: [data.streetAddress, data.aptFloor]
+        .filter(Boolean)
+        .join(", "),
+      phone: data.phone,
+      customer: getCurrentUser()?.name || "Guest",
+      note: data.deliveryNotes,
+      courier: courier?.name || "CraveDash Courier",
+      payment: payments.find((p) => p.id === paymentId)?.title || "Card",
+    });
+
+    clearCart();
+    navigate("/myOrders");
+  }
+
+  function onOrderInvalid() {
+    setOrderMessage("Please fix the highlighted delivery fields.");
+  }
 
   return (
     <main className="mx-auto min-h-screen max-w-7xl bg-white px-4 py-8 sm:px-6 lg:px-8">
@@ -159,10 +229,16 @@ const itemCount = cartCount;
         </span>
       </div>
 
-      <div className="grid items-start gap-6 lg:grid-cols-[1fr_380px]">
+      <form
+        id="checkout-form"
+        onSubmit={handleSubmit(onOrderSubmit, onOrderInvalid)}
+        noValidate
+        className="grid items-start gap-6 lg:grid-cols-[1fr_380px]"
+      >
         {/* ============ LEFT COLUMN ============ */}
         <div className="space-y-6">
           {/* Restaurant + items */}
+          <Reveal>
           <section className={cardCls}>
             <div className="flex items-center justify-between border-b border-slate-100 pb-4">
               <div className="flex items-center gap-3">
@@ -170,7 +246,10 @@ const itemCount = cartCount;
                   <Store className="size-5" />
                 </div>
                 <div>
-                  <h2 className="font-bold text-slate-900">Bella Napoli Bistro</h2>
+                  <h2 className="font-bold text-slate-900">
+                    {cartItems.find((i) => i.restaurant)?.restaurant ||
+                      "CraveDash Kitchen"}
+                  </h2>
                   <p className="flex items-center gap-2 text-xs text-slate-500">
                     <span className="flex items-center gap-1 rounded bg-green-50 px-1.5 py-0.5 font-semibold text-green-700">
                       <Star className="size-3 fill-current" /> 4.9 (1.2k)
@@ -180,6 +259,7 @@ const itemCount = cartCount;
                 </div>
               </div>
               <button
+                type="button"
                 onClick={clearCart}
                 className="flex items-center gap-1 text-xs font-medium text-orange-600 hover:underline"
               >
@@ -196,12 +276,12 @@ const itemCount = cartCount;
                 {cartItems.map((item) => (
                   <div key={item.id} className="flex gap-4 py-5">
                     <img
-                      src={item.image}
+                      src={item.image || item.img}
                       alt={item.name}
                       className="size-20 shrink-0 rounded-xl bg-slate-100 object-cover"
                     />
                     <div className="flex min-w-0 flex-1 flex-col justify-between">
-                      <div className="flex cartItems-start justify-between gap-3">
+                      <div className="flex items-start justify-between gap-3">
                         <div className="min-w-0">
                           <h3 className="font-bold text-slate-900">{item.name}</h3>
                           <p className="mt-0.5 text-xs text-slate-500">
@@ -219,6 +299,7 @@ const itemCount = cartCount;
                       <div className="mt-2 flex justify-end">
                         <div className="flex items-center gap-1 rounded-full border border-slate-200 bg-slate-50 px-2 py-1">
                           <button
+                            type="button"
                             onClick={() => decreaseCartQuantity(item.id)}
                             className="grid size-6 place-items-center rounded-full text-slate-600 hover:bg-white"
                             aria-label="Decrease quantity"
@@ -229,6 +310,7 @@ const itemCount = cartCount;
                             {item.quantity}
                           </span>
                           <button
+                            type="button"
                             onClick={() => increaseCartQuantity(item.id)}
                             className="grid size-6 place-items-center rounded-full text-slate-600 hover:bg-white"
                             aria-label="Increase quantity"
@@ -236,6 +318,7 @@ const itemCount = cartCount;
                             <Plus className="size-3.5" />
                           </button>
                           <button
+                            type="button"
                             onClick={() => RemoveItemFromCart(item.id)}
                             className="ml-1 grid size-6 place-items-center rounded-full text-slate-400 hover:text-red-600"
                             aria-label="Remove item"
@@ -250,8 +333,10 @@ const itemCount = cartCount;
               </div>
             )}
           </section>
+          </Reveal>
 
           {/* Delivery address */}
+          <Reveal delay={60}>
           <section className={cardCls}>
             <SectionTitle
               Icon={MapPin}
@@ -272,6 +357,7 @@ const itemCount = cartCount;
                 { id: "work", label: "Work (Financial District Tower B)", Icon: Briefcase },
               ].map(({ id, label, Icon }) => (
                 <button
+                  type="button"
                   key={id}
                   onClick={() => setAddress(id)}
                   className={`flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-semibold transition ${
@@ -283,7 +369,10 @@ const itemCount = cartCount;
                   <Icon className="size-4" /> {label}
                 </button>
               ))}
-              <button className="flex items-center gap-2 rounded-full border border-orange-200 bg-orange-50 px-4 py-2 text-xs font-semibold text-orange-600">
+              <button
+                type="button"
+                className="flex items-center gap-2 rounded-full border border-orange-200 bg-orange-50 px-4 py-2 text-xs font-semibold text-orange-600"
+              >
                 <PlusCircle className="size-4" /> Add New
               </button>
             </div>
@@ -291,10 +380,9 @@ const itemCount = cartCount;
             <div className="grid gap-4 sm:grid-cols-2">
               <FormFields
                 fields={checkoutFields}
-                values={checkout.values}
-                errors={checkout.errors}
-                onChange={checkout.handleChange}
-                onBlur={checkout.handleBlur}
+                register={(name) => registeredFields[name]}
+                setValue={setValue}
+                errors={errors}
                 trailingFor={(name) =>
                   name === "phone" ? (
                     <span className="flex items-center gap-1 rounded-xl border border-green-300 bg-green-50 px-3 text-xs font-semibold text-green-700">
@@ -305,8 +393,10 @@ const itemCount = cartCount;
               />
             </div>
           </section>
+          </Reveal>
 
           {/* Courier */}
+          <Reveal delay={60}>
           <section className={cardCls}>
             <SectionTitle
               Icon={Truck}
@@ -325,6 +415,7 @@ const itemCount = cartCount;
                 const fee = free ? 0 : c.freeOver ? 2.49 : c.fee;
                 return (
                   <button
+                    type="button"
                     key={c.id}
                     onClick={() => setCourierId(c.id)}
                     className={`relative flex flex-col rounded-2xl border-2 p-4 text-left transition ${
@@ -361,8 +452,10 @@ const itemCount = cartCount;
               })}
             </div>
           </section>
+          </Reveal>
 
           {/* Payment */}
+          <Reveal delay={60}>
           <section className={cardCls}>
             <SectionTitle
               Icon={Wallet}
@@ -378,6 +471,7 @@ const itemCount = cartCount;
                 const selected = paymentId === p.id;
                 return (
                   <button
+                    type="button"
                     key={p.id}
                     onClick={() => setPaymentId(p.id)}
                     className={`flex w-full items-center gap-3 rounded-xl border px-4 py-3 text-left transition ${
@@ -419,10 +513,12 @@ const itemCount = cartCount;
               })}
             </div>
           </section>
+          </Reveal>
         </div>
 
         {/* ============ RIGHT COLUMN ============ */}
         <aside className="space-y-4 lg:sticky lg:top-6">
+          <Reveal delay={80}>
           <div className={cardCls}>
             <div className="mb-5 flex items-center justify-between">
               <h2 className="text-xl font-extrabold text-slate-900">Bill Summary</h2>
@@ -442,6 +538,7 @@ const itemCount = cartCount;
                 />
               </div>
               <button
+                type="button"
                 onClick={applyPromo}
                 className="rounded-lg bg-slate-800 px-4 text-xs font-bold text-white hover:bg-slate-900"
               >
@@ -456,7 +553,11 @@ const itemCount = cartCount;
                   <CheckCircle2 className="size-4" />
                   <b>{promoCode} (−{money(discount)})</b> applied
                 </span>
-                <button onClick={() => setPromoCode("")} aria-label="Remove promo">
+                <button
+                  type="button"
+                  onClick={() => setPromoCode("")}
+                  aria-label="Remove promo"
+                >
                   <X className="size-4 text-slate-500" />
                 </button>
               </div>
@@ -500,11 +601,18 @@ const itemCount = cartCount;
             </div>
 
             <button
+              type="submit"
               disabled={cartItems.length === 0}
               className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-orange-500 py-3.5 font-bold text-white transition hover:bg-orange-600 disabled:cursor-not-allowed disabled:opacity-50"
             >
               Place Order &amp; Pay ({money(total)}) <ArrowRight className="size-5" />
             </button>
+
+            {orderMessage && (
+              <p className="mt-3 rounded-lg bg-amber-50 px-3 py-2 text-xs font-medium text-amber-800">
+                {orderMessage}
+              </p>
+            )}
 
             <ul className="mt-5 space-y-2 border-t border-slate-100 pt-4 text-xs font-medium text-slate-700">
               <li className="flex items-center gap-2">
@@ -518,7 +626,9 @@ const itemCount = cartCount;
               </li>
             </ul>
           </div>
+          </Reveal>
 
+          <Reveal delay={120}>
           <div className="flex items-center gap-4 rounded-2xl border border-indigo-100 bg-indigo-50/60 p-5">
             <div className="grid size-12 shrink-0 place-items-center rounded-xl bg-orange-100 text-orange-500">
               <Clock className="size-6" />
@@ -530,8 +640,9 @@ const itemCount = cartCount;
               </p>
             </div>
           </div>
+          </Reveal>
         </aside>
-      </div>
+      </form>
     </main>
   );
 }

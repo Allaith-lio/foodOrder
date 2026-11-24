@@ -14,6 +14,7 @@ import RestaurantCard from '../components/common/RestaurantsCard';
 import { restaurants } from '../data/catalog';
 import { useNavigate } from 'react-router-dom';
 import { useWishlist } from '../hooks/WishlistContext';
+import Reveal from '../components/common/Reveal';
 
 
 
@@ -300,6 +301,7 @@ const Restaurants = () => {
                 )}
             </div>
 
+            <Reveal>
             {filteredRestaurants.length > 0 ? (
                 <>
                     <p className="mt-6 text-sm font-medium text-muted">
@@ -382,6 +384,7 @@ const Restaurants = () => {
                     </button>
                 </div>
             )}
+            </Reveal>
 
             {showTop && (
                 <button

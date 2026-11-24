@@ -535,5 +535,6 @@ export const toCartItem = (dish) => ({
   name: dish.name,
   price: dish.price,
   image: dish.image,
+  description: dish.description,
   restaurant: dish.restaurant,
 });

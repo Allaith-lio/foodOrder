@@ -1,4 +1,4 @@
-
+import { forwardRef } from "react";
 import { Mail, LockKeyhole, UserRound } from "lucide-react";
 
 const icons = {
@@ -7,32 +7,33 @@ const icons = {
   password: LockKeyhole,
 };
 
-function InputField({
-  name,
-  label,
-  type = "text",
-  placeholder,
-  autoComplete,
-  value,
-  onChange,
-  onBlur,
-  error,
-  inputMode, maxLength,
-  required = true,
-  minLength,
-  multiline = false,
-  rows = 5,
-  icon,
-  trailing,
-}) {
+const InputField = forwardRef(function InputField(
+  {
+    name,
+    label,
+    type = "text",
+    placeholder,
+    autoComplete,
+    onChange,
+    onBlur,
+    error,
+    inputMode,
+    maxLength,
+    required = true,
+    minLength,
+    multiline = false,
+    rows = 5,
+    icon,
+    trailing,
+    ...rest
+  },
+  ref
+) {
   const Icon = icon || icons[name];
   const Field = multiline ? "textarea" : "input";
 
   return (
-    <label
-      htmlFor={name}
-      className="grid gap-2 text-sm font-semibold text-ink"
-    >
+    <label htmlFor={name} className="grid gap-2 text-sm font-semibold text-ink">
       <span>{label}</span>
 
       <span
@@ -51,6 +52,7 @@ function InputField({
         )}
 
         <Field
+          ref={ref}
           id={name}
           className="w-full min-w-0 resize-none bg-transparent py-3 text-sm text-ink outline-none placeholder:text-muted/60"
           type={multiline ? undefined : type}
@@ -58,25 +60,30 @@ function InputField({
           name={name}
           placeholder={placeholder}
           autoComplete={autoComplete}
-          value={value}
           onChange={onChange}
+          onBlur={onBlur}
           inputMode={inputMode}
           maxLength={maxLength}
           required={required}
           minLength={minLength}
-          onBlur={onBlur}
           aria-invalid={!!error}
           aria-describedby={error ? `${name}-error` : undefined}
+          {...rest}
         />
         {trailing}
       </span>
+
       {error && (
-        <span id={`${name}-error`} role="alert" className="text-xs font-medium text-red-500">
+        <span
+          id={`${name}-error`}
+          role="alert"
+          className="text-xs font-medium text-red-500"
+        >
           {error}
         </span>
       )}
     </label>
   );
-}
+});
 
 export default InputField;

@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   MapPinned,
   Navigation,
@@ -7,7 +9,7 @@ import {
   X,
 } from "lucide-react";
 import { locationFields } from "../../data/formFields";
-import { useForm } from "../../hooks/useForm";
+import { locationSchema } from "../../utils/validators";
 import FormFields from "../common/FormFields";
 
 const cities = [
@@ -40,13 +42,23 @@ const gpsMessages = {
 // the draft starts from the saved location every time.
 export default function LocationModal({ location, onSave, onClose }) {
   const [draft, setDraft] = useState({ ...location });
-  const addressForm = useForm(locationFields, {
-    area: location.area ?? "",
-    street: location.street ?? "",
-    details: location.details ?? "",
-  });
   const [gpsLoading, setGpsLoading] = useState(false);
   const [error, setError] = useState("");
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(locationSchema),
+    mode: "onBlur",
+    defaultValues: {
+      area: location.area ?? "",
+      street: location.street ?? "",
+      details: location.details ?? "",
+    },
+  });
 
   // Esc to close
   useEffect(() => {
@@ -58,8 +70,10 @@ export default function LocationModal({ location, onSave, onClose }) {
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [onClose]);
 
-  const updateField = (key) => (event) =>
+  const updateField = (key) => (event) => {
+    setError("");
     setDraft((prev) => ({ ...prev, [key]: event.target.value }));
+  };
 
   // Get current GPS coordinates
   const getCurrentLocation = () => {
@@ -91,10 +105,8 @@ export default function LocationModal({ location, onSave, onClose }) {
     );
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-
-    const hasAddress = draft.city && addressForm.values.area;
+  const onValidSubmit = (formValues) => {
+    const hasAddress = draft.city && formValues.area;
     const hasGPS = draft.gps && draft.latitude !== null;
 
     if (!hasAddress && !hasGPS) {
@@ -102,11 +114,12 @@ export default function LocationModal({ location, onSave, onClose }) {
       return;
     }
 
+    setError("");
     onSave({
       ...draft,
-      area: addressForm.values.area,
-      street: addressForm.values.street,
-      details: addressForm.values.details,
+      area: formValues.area,
+      street: formValues.street,
+      details: formValues.details,
     });
   };
 
@@ -149,7 +162,7 @@ export default function LocationModal({ location, onSave, onClose }) {
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-5 p-5">
+        <form onSubmit={handleSubmit(onValidSubmit)} noValidate className="space-y-5 p-5">
           {/* GPS */}
           <div className="rounded-xl border border-primary/20 bg-primary/5 p-4">
             <div className="flex items-center gap-3">
@@ -213,10 +226,9 @@ export default function LocationModal({ location, onSave, onClose }) {
 
             <FormFields
               fields={locationFields}
-              values={addressForm.values}
-              errors={addressForm.errors}
-              onChange={addressForm.handleChange}
-              onBlur={addressForm.handleBlur}
+              register={register}
+              setValue={setValue}
+              errors={errors}
             />
           </div>
 

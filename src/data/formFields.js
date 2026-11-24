@@ -1,10 +1,4 @@
-﻿// Central field definitions for every dynamic form in the app.
-// Each object key is the field name; `rule` points to a validator in
-// utils/validators.js (defaults to the field name) and `optional` marks
-// fields that may be left empty. Render them with <FormFields /> and
-// validate them with useForm / checkForm (both iterate Object.keys).
-
-export const loginFields = {
+﻿export const loginFields = {
   email: {
     label: "Email address",
     type: "email",
@@ -83,6 +77,35 @@ export const checkoutFields = {
     placeholder: "09XXXXXXXX",
     icon: "phone",
     rule: "phone",
+  },
+};
+
+export const profileFields = {
+  name: {
+    label: "Full Name",
+    type: "text",
+    placeholder: "Enter your full name",
+    autoComplete: "name",
+    icon: "user",
+    rule: "username",
+  },
+  email: {
+    label: "Email Address",
+    type: "email",
+    placeholder: "Enter your email",
+    autoComplete: "email",
+    icon: "mail",
+    rule: "email",
+  },
+  phone: {
+    label: "Phone Number",
+    type: "tel",
+    inputMode: "tel",
+    placeholder: "09XXXXXXXX",
+    autoComplete: "tel",
+    maxLength: 10,
+    icon: "phone",
+    optional: true,
   },
 };
 

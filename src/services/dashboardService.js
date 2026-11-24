@@ -140,6 +140,53 @@ export function logoutUser() {
   notifyAuthChange()
 }
 
+const ADDRESSES_KEY = 'storeAddresses'
+
+function addressesStorageKey(userId) {
+  return `${ADDRESSES_KEY}:${userId}`
+}
+
+export async function getSavedAddresses() {
+  const currentUser = getCurrentUser()
+  if (!currentUser) return []
+  return readStorage(addressesStorageKey(currentUser.id), [])
+}
+
+export async function addSavedAddress(address) {
+  const currentUser = getCurrentUser()
+  if (!currentUser) throw new Error('Please sign in to save this information.')
+
+  const addresses = await getSavedAddresses()
+  const item = { id: crypto.randomUUID(), ...address }
+  localStorage.setItem(
+    addressesStorageKey(currentUser.id),
+    JSON.stringify([...addresses, item]),
+  )
+  return item
+}
+
+export async function updateSavedAddress(addressId, updates) {
+  const currentUser = getCurrentUser()
+  if (!currentUser) throw new Error('Please sign in to save this information.')
+
+  const addresses = await getSavedAddresses()
+  const updated = addresses.map((address) =>
+    address.id === addressId ? { ...address, ...updates } : address,
+  )
+  localStorage.setItem(addressesStorageKey(currentUser.id), JSON.stringify(updated))
+  return updated.find((address) => address.id === addressId)
+}
+
+export async function deleteSavedAddress(addressId) {
+  const currentUser = getCurrentUser()
+  if (!currentUser) throw new Error('Please sign in to save this information.')
+
+  const addresses = (await getSavedAddresses()).filter(
+    (address) => address.id !== addressId,
+  )
+  localStorage.setItem(addressesStorageKey(currentUser.id), JSON.stringify(addresses))
+}
+
 const mockStats = {
   totalSales: { value: 48250, change: 12.5 },
   netProfit: { value: 12840, change: 8.2 },

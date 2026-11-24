@@ -22,15 +22,11 @@ const iconMap = {
   home: Home,
 };
 
-// Renders every field in a fields definition object (Object.keys order)
-// using the shared InputField (or AvatarField for type: "file"), wiring
-// value/error/change/blur handlers.
 export default function FormFields({
   fields,
-  values,
+  register,
+  setValue,
   errors = {},
-  onChange,
-  onBlur,
   trailingFor,
 }) {
   return (
@@ -44,9 +40,9 @@ export default function FormFields({
               key={name}
               name={name}
               label={config.label}
-              error={errors[name]}
+              error={errors[name]?.message}
               required={config.required ?? !config.optional}
-              onChange={onChange(name)}
+              onChange={(file) => setValue?.(name, file, { shouldValidate: true })}
             />
           );
         }
@@ -54,17 +50,16 @@ export default function FormFields({
         const { icon, optional, required, ...rest } = config;
         delete rest.rule;
         const Icon = iconMap[icon];
+        const fieldRegistration = register(name);
+
         return (
           <InputField
             key={name}
-            name={name}
             icon={Icon}
-            value={values[name] ?? ""}
-            onChange={onChange(name)}
-            onBlur={onBlur ? onBlur(name) : undefined}
-            error={errors[name]}
+            error={errors[name]?.message}
             required={required ?? !optional}
             trailing={trailingFor ? trailingFor(name) : undefined}
+            {...fieldRegistration}
             {...rest}
           />
         );

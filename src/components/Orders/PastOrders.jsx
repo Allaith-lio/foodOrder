@@ -1,10 +1,31 @@
 
 import { useState } from "react";
-import { Check, Star, HelpCircle, Download, RotateCcw, ChevronDown } from "lucide-react";
-import { pastOrders, money, cardCls } from "./ordersData";
+import { Link, useNavigate } from "react-router-dom";
+import { Check, Download, RotateCcw, ChevronDown, PackageCheck } from "lucide-react";
+import {
+  toPastView,
+  money,
+  cardCls,
+  orderToCartItems,
+  downloadInvoice,
+} from "./ordersData";
+import { useShoppingCart } from "../../hooks/CartContext";
 
-export default function PastOrders() {
-  const [visible, setVisible] = useState(pastOrders.length);
+const PAGE_SIZE = 4;
+
+export default function PastOrders({ orders = [] }) {
+  const [visible, setVisible] = useState(PAGE_SIZE);
+  const rows = orders.map(toPastView);
+  const { addToCart } = useShoppingCart();
+  const navigate = useNavigate();
+
+  // Put every item of a past order back into the cart, then open checkout.
+  const reorder = (order) => {
+    orderToCartItems(order).forEach((item) =>
+      addToCart(item, item.quantity),
+    );
+    navigate("/cart");
+  };
 
   return (
     <section>
@@ -26,8 +47,25 @@ export default function PastOrders() {
         </label>
       </div>
 
+      {rows.length === 0 ? (
+        <div className={`${cardCls} flex flex-col items-center gap-3 px-6 py-14 text-center`}>
+          <span className="grid size-14 place-items-center rounded-full bg-tertiary/10 text-tertiary">
+            <PackageCheck className="size-7" />
+          </span>
+          <div>
+            <p className="font-bold text-ink">No past orders yet</p>
+            <p className="mt-1 text-sm text-muted">
+              Your delivered orders will show up here — ready to reorder or
+              download invoices.
+            </p>
+          </div>
+          <Link to="/restaurants" className="btn btn-primary mt-2 no-underline">
+            Order something
+          </Link>
+        </div>
+      ) : (
       <div className="space-y-4">
-        {pastOrders.slice(0, visible).map((o) => (
+        {rows.slice(0, visible).map((o) => (
           <article key={o.id} className={`${cardCls} p-5`}>
             <div className="flex gap-4">
               <img
@@ -58,26 +96,18 @@ export default function PastOrders() {
             </div>
 
             <div className="mt-4 flex flex-col gap-3 border-t border-line pt-4 sm:flex-row sm:items-center sm:justify-between">
-              <div className="flex items-center gap-4 text-[11px] font-medium text-muted">
-                {o.left === "review" ? (
-                  <button className="flex items-center gap-1.5 font-semibold text-primary hover:underline">
-                    <Star className="size-3.5" /> Rate &amp; Review
-                  </button>
-                ) : (
-                  <button className="flex items-center gap-1.5 hover:text-ink">
-                    <HelpCircle className="size-3.5" /> Help with Order
-                  </button>
-                )}
-                <button className="flex items-center gap-1.5 hover:text-ink">
-                  <Download className="size-3.5" /> Download Invoice
-                </button>
-              </div>
+              <button
+                onClick={() => downloadInvoice(o.raw)}
+                className="flex items-center gap-1.5 text-[11px] font-medium text-muted hover:text-ink"
+              >
+                <Download className="size-3.5" /> Download Invoice
+              </button>
 
               <div className="flex gap-2">
-                <button className="rounded-lg border border-line bg-surface px-4 py-2 text-xs font-semibold text-ink hover:bg-page">
-                  View Receipt
-                </button>
-                <button className="flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-xs font-bold text-white hover:bg-primary-hover">
+                <button
+                  onClick={() => reorder(o.raw)}
+                  className="flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-xs font-bold text-white hover:bg-primary-hover"
+                >
                   <RotateCcw className="size-3.5" /> Reorder
                 </button>
               </div>
@@ -85,15 +115,18 @@ export default function PastOrders() {
           </article>
         ))}
       </div>
+      )}
 
-      <div className="mt-6 flex justify-center">
-        <button
-          onClick={() => setVisible((v) => v + 2)}
-          className="flex items-center gap-2 rounded-lg border border-line bg-surface px-6 py-2.5 text-xs font-semibold text-ink hover:bg-page"
-        >
-          Show More Past Orders <ChevronDown className="size-4" />
-        </button>
-      </div>
+      {rows.length > visible && (
+        <div className="mt-6 flex justify-center">
+          <button
+            onClick={() => setVisible((v) => v + PAGE_SIZE)}
+            className="flex items-center gap-2 rounded-lg border border-line bg-surface px-6 py-2.5 text-xs font-semibold text-ink hover:bg-page"
+          >
+            Show More Past Orders <ChevronDown className="size-4" />
+          </button>
+        </div>
+      )}
     </section>
   );
 }

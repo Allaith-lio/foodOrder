@@ -1,99 +1,136 @@
-export const validators = {
-  // ---------- Accounts ----------
-  username: {
-    regex: /^[\p{L}][\p{L}\s'-]{1,29}$/u,
-    message: "Name must be 2–30 letters (spaces, - and ' allowed).",
-  },
-  email: {
-    regex: /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/,
-    message: "Enter a valid email like you@example.com.",
-  },
-  password: {
-    regex: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,64}$/,
-    message: "Password needs 8+ characters with upper, lower case and a number.",
-  },
-  // For Syrian Number
-  phone: {
-    regex: /^09\d{8}$/,
-    message: "Enter a valid Syrian number: 09XXXXXXXX (10 digits).",
-  },
+import { z } from "zod";
 
-  // ---------- Address ----------
-  label: {
-    regex: /^[\p{L}\p{N}\s'-]{2,20}$/u,
-    message: "Label must be 2–20 characters (e.g. Home, Work).",
-  },
-  fullName: {
-    regex: /^[\p{L}][\p{L}\s'-]{1,49}$/u,
-    message: "Enter a valid name (2–50 letters).",
-  },
-  address: {
-    regex: /^[\p{L}\p{N}\s,.'/#&،-]{5,100}$/u,
-    message: "Enter a valid street address (5–100 characters).",
-  },
-  city: {
-    regex: /^[\p{L}][\p{L}\s.'-]{1,49}$/u,
-    message: "Enter a valid city name (letters only).",
-  },
-  region: {
-    regex: /^[\p{L}][\p{L}\s.'-]{1,49}$/u,
-    message: "Enter a valid state or region name (letters only).",
-  },
-  country: {
-    regex: /^[\p{L}][\p{L}\s.'-]{1,49}$/u,
-    message: "Enter a valid country name (letters only).",
-  },
-  // ---------- Contact ----------
-  subject: {
-    regex: /^[\p{L}\p{N}\s.,!?'"():&/-]{3,100}$/u,
-    message: "Subject must be 3–100 characters.",
-  },
-  message: {
-    regex: /^[\s\S]{10,1000}$/,
-    message: "Message must be between 10 and 1000 characters.",
-  },
-};
-
-// ----------clean input during writing----------
 const ARABIC_DIGITS = "٠١٢٣٤٥٦٧٨٩";
 
-export function sanitizePhone(value) {
+export function normalizePhoneDigits(value) {
   let digits = String(value ?? "")
-    .replace(/[٠-٩]/g, (d) => ARABIC_DIGITS.indexOf(d)) // Arabic Number to English
-    .replace(/\D/g, ""); // Remove Everything is not a Number
+    .replace(/[٠-٩]/g, (d) => String(ARABIC_DIGITS.indexOf(d)))
+    .replace(/\D/g, "");
 
   if (digits.startsWith("00963")) digits = "0" + digits.slice(5);
   else if (digits.startsWith("963")) digits = "0" + digits.slice(3);
 
-  return digits.slice(0, 10); 
+  return digits.slice(0, 10);
 }
 
+export const usernameSchema = z
+  .string()
+  .trim()
+  .min(1, "This field is required.")
+  .regex(
+    /^[\p{L}][\p{L}\s'-]{1,29}$/u,
+    "Name must be 2–30 letters (spaces, - and ' allowed)."
+  );
 
-export function sanitize(rule, value) {
-  return rule === "phone" ? sanitizePhone(value) : value;
-}
+export const emailSchema = z
+  .string()
+  .trim()
+  .min(1, "This field is required.")
+  .regex(/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/, "Enter a valid email like you@example.com.");
 
-export function validateField(name, value, { optional = false } = {}) {
-  const text = (value ?? "").trim();
+export const registerPasswordSchema = z
+  .string()
+  .min(1, "This field is required.")
+  .regex(
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,64}$/,
+    "Password needs 8+ characters with upper, lower case and a number."
+  );
 
-  if (!text) return optional ? "" : "This field is required.";
+export const loginPasswordSchema = z
+  .string()
+  .min(1, "This field is required.");
 
-  const rule = validators[name];
-  if (!rule) return "";
+export const syrianPhoneSchema = z.preprocess(
+  normalizePhoneDigits,
+  z
+    .string()
+    .min(1, "This field is required.")
+    .regex(/^09\d{8}$/, "Enter a valid Syrian number: 09XXXXXXXX (10 digits).")
+);
+export const checkoutSchema = z.object({
+  streetAddress: z
+    .string()
+    .trim()
+    .min(5, "Enter a valid street address (5–100 characters).")
+    .max(100, "Enter a valid street address (5–100 characters)."),
+  aptFloor: z.string().trim().max(80).optional().or(z.literal("")),
+  deliveryNotes: z.string().trim().max(250).optional().or(z.literal("")),
+  phone: syrianPhoneSchema,
+});
 
-  return rule.regex.test(text) ? "" : rule.message;
-}
-// fields = object متل profileFields / addressFields / checkoutFields
-export function checkField(fields, name, value) {
-  const { rule = name, optional = false } = fields[name];
-  return validateField(rule, value, { optional });
-}
+export const locationSchema = z.object({
+  area: z.string().trim().max(80).optional().or(z.literal("")),
+  street: z.string().trim().max(120).optional().or(z.literal("")),
+  details: z.string().trim().max(250).optional().or(z.literal("")),
+});
 
-export function checkForm(fields, values) {
-  const errors = {};
-  Object.keys(fields).forEach((name) => {
-    const error = checkField(fields, name, values[name]);
-    if (error) errors[name] = error;
-  });
-  return errors;
-}
+export const loginSchema = z.object({
+  email: emailSchema,
+  password: loginPasswordSchema,
+});
+
+export const registerSchema = z.object({
+  username: usernameSchema,
+  email: emailSchema,
+  password: registerPasswordSchema,
+  avatar: z.string().optional(),
+});
+
+const optionalSyrianPhoneSchema = z.preprocess(
+  normalizePhoneDigits,
+  z.union([
+    z.literal(""),
+    z
+      .string()
+      .regex(/^09\d{8}$/, "Enter a valid Syrian number: 09XXXXXXXX (10 digits)."),
+  ])
+);
+
+export const profileSchema = z.object({
+  name: usernameSchema,
+  email: emailSchema,
+  phone: optionalSyrianPhoneSchema,
+  avatar: z.string().optional(),
+});
+
+export const addressSchema = z.object({
+  label: z
+    .string()
+    .trim()
+    .min(1, "This field is required.")
+    .max(40, "Keep the label under 40 characters."),
+  fullName: usernameSchema,
+  address: z
+    .string()
+    .trim()
+    .min(5, "Enter a valid street address (5–120 characters).")
+    .max(120, "Enter a valid street address (5–120 characters)."),
+  city: z
+    .string()
+    .trim()
+    .min(1, "This field is required.")
+    .max(80, "Keep the city under 80 characters."),
+  region: z.string().trim().max(80).optional().or(z.literal("")),
+  country: z
+    .string()
+    .trim()
+    .min(1, "This field is required.")
+    .max(80, "Keep the country under 80 characters."),
+  phone: optionalSyrianPhoneSchema,
+});
+
+export const cardSchema = z.object({
+  holder: usernameSchema,
+  number: z.preprocess(
+    (value) => String(value ?? "").replace(/\D/g, ""),
+    z
+      .string()
+      .min(1, "This field is required.")
+      .regex(/^\d{12,19}$/, "Enter a valid card number (12–19 digits).")
+  ),
+  expiry: z.string().min(1, "This field is required."),
+});
+
+export const passwordVerifySchema = z.object({
+  password: loginPasswordSchema,
+});

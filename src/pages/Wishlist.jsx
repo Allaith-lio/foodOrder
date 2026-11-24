@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 
 import { restaurants } from '../data/catalog';
 import RestaurantCard from '../components/common/RestaurantsCard';
+import Reveal from '../components/common/Reveal';
 import { useWishlist } from '../hooks/WishlistContext';
 
 const Wishlist = () => {
@@ -31,7 +32,8 @@ const Wishlist = () => {
 				</p>
 			</section>
 
-			<div className=" flex items-center justify-between gap-4">
+			<Reveal>
+				<div className=" flex items-center justify-between gap-4">
 				<p className="text-sm text-[grey]">
 					Showing{' '}
 					<span className="font-bold text-ink">
@@ -78,6 +80,7 @@ const Wishlist = () => {
 					</Link>
 				</div>
 			)}
+			</Reveal>
 		</div>
 	);
 };

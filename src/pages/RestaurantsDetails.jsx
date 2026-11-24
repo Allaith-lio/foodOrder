@@ -27,6 +27,7 @@ import {
   toCartItem,
 } from "../data/catalog";
 import FoodImage from "../components/ui/FoodImage";
+import Reveal from "../components/common/Reveal";
 
 const restaurantLocation = [35.5317, 35.7901];
 const restaurant = getRestaurantBySlug("taza-041");
@@ -428,7 +429,14 @@ function MenuSection() {
                   key={item.name}
                   className="flex items-start justify-between gap-3 border-b border-line/70 py-3 last:border-0 last:pb-0"
                 >
-                  <div className="min-w-0">
+                  {item.image && (
+                    <FoodImage
+                      src={item.image}
+                      alt={item.name}
+                      className="size-14 shrink-0 rounded-xl"
+                    />
+                  )}
+                  <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-center gap-2">
                       <h4 className="text-xs font-bold">{item.name}</h4>
                       {item.badge && (
@@ -635,15 +643,27 @@ export default function RestaurantsDetails() {
               </div>
             </section>
 
-            <PopularSlider />
-            <MenuSection />
-            <GuestStories />
+            <Reveal>
+              <PopularSlider />
+            </Reveal>
+            <Reveal delay={60}>
+              <MenuSection />
+            </Reveal>
+            <Reveal delay={60}>
+              <GuestStories />
+            </Reveal>
           </div>
 
           <aside className="min-w-0 space-y-4 lg:sticky lg:top-24">
-            <RatingCard />
-            <LocationCard />
-            <TeamCard />
+            <Reveal delay={40}>
+              <RatingCard />
+            </Reveal>
+            <Reveal delay={80}>
+              <LocationCard />
+            </Reveal>
+            <Reveal delay={120}>
+              <TeamCard />
+            </Reveal>
             <div className="flex items-center gap-3 rounded-2xl border border-line bg-tertiary/10 p-4">
               <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-surface text-tertiary">
                 <MessageCircle className="size-4" />
@@ -656,6 +676,7 @@ export default function RestaurantsDetails() {
           </aside>
         </div>
 
+        <Reveal delay={60}>
         <div className="mt-8 flex flex-col items-center justify-between gap-3 rounded-2xl bg-tertiary px-5 py-5 text-center text-white sm:flex-row sm:px-7 sm:text-left">
           <div>
             <p className="text-sm font-bold">Hungry? Your table is waiting.</p>
@@ -670,6 +691,7 @@ export default function RestaurantsDetails() {
             Browse the menu <ArrowRight className="size-4" />
           </a>
         </div>
+        </Reveal>
       </div>
     </main>
   );

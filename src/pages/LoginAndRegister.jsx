@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   ArrowRight,
   Check,
@@ -14,8 +16,9 @@ import {
 import { useTheme } from "../hooks/ThemeContext";
 import Logo from "../components/common/Logo";
 import { loginFields, registerFields } from "../data/formFields";
-import { useForm } from "../hooks/useForm";
+import { loginSchema, registerSchema } from "../utils/validators";
 import FormFields from "../components/common/FormFields";
+import { loginUser, registerUser } from "../services/dashboardService";
 
 const foodPhoto =
   "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1400&q=85";
@@ -25,9 +28,13 @@ export default function LoginAndRegister() {
   const navigate = useNavigate();
   const isLogin = location.pathname === "/login";
   const [showPassword, setShowPassword] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState("");
   const { isDarkMode, toggleTheme } = useTheme();
+
   const baseFields = isLogin ? loginFields : registerFields;
+  const activeSchema = isLogin ? loginSchema : registerSchema;
+
   const fields = {
     ...baseFields,
     password: {
@@ -35,8 +42,32 @@ export default function LoginAndRegister() {
       type: showPassword ? "text" : "password",
     },
   };
-  const { values, errors, handleChange, handleBlur, validateAll } =
-    useForm(fields);
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setValue,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(activeSchema),
+    mode: "onBlur",
+    defaultValues: isLogin
+      ? { email: "", password: "" }
+      : { username: "", email: "", password: "", avatar: "" },
+  });
+
+  useEffect(() => {
+    reset(
+      isLogin
+        ? { email: "", password: "" }
+        : { username: "", email: "", password: "", avatar: "" }
+    );
+    queueMicrotask(() => {
+      setMessage("");
+      setShowPassword(false);
+    });
+  }, [isLogin, reset]);
 
   const passwordTrailing = (name) =>
     name === "password" ? (
@@ -55,21 +86,37 @@ export default function LoginAndRegister() {
     ) : null;
 
   function switchMode() {
-    setMessage("");
-    setShowPassword(false);
     navigate(isLogin ? "/register" : "/login");
   }
 
-  function handleSubmit(event) {
-    event.preventDefault();
-    const nextErrors = validateAll();
-    if (Object.keys(nextErrors).length > 0) {
-      setMessage("Please fix the highlighted fields.");
-      return;
+  async function onValidSubmit(data) {
+    setIsSubmitting(true);
+    setMessage("");
+    try {
+      if (isLogin) {
+        await loginUser({ email: data.email, password: data.password });
+      } else {
+        await registerUser({
+          name: data.username,
+          email: data.email,
+          password: data.password,
+          avatar: data.avatar || "",
+        });
+      }
+      navigate("/", { replace: true });
+    } catch (error) {
+      setMessage(
+        error instanceof Error
+          ? error.message
+          : "Something went wrong. Please try again."
+      );
+    } finally {
+      setIsSubmitting(false);
     }
-    setMessage(
-      "Authentication isn't connected yet. Your form is ready for account setup.",
-    );
+  }
+
+  function onInvalidSubmit() {
+    setMessage("Please fix the highlighted fields.");
   }
 
   return (
@@ -115,13 +162,16 @@ export default function LoginAndRegister() {
               : "Join CraveDash for delicious discoveries and doorstep delivery."}
           </p>
 
-          <form className="mt-8 space-y-4" onSubmit={handleSubmit}>
+          <form
+            className="mt-8 space-y-4"
+            onSubmit={handleSubmit(onValidSubmit, onInvalidSubmit)}
+            noValidate
+          >
             <FormFields
               fields={fields}
-              values={values}
+              register={register}
+              setValue={setValue}
               errors={errors}
-              onChange={handleChange}
-              onBlur={handleBlur}
               trailingFor={passwordTrailing}
             />
 
@@ -138,11 +188,17 @@ export default function LoginAndRegister() {
 
             <button
               type="submit"
-              className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 text-sm font-bold text-white shadow-[0_8px_18px_rgba(255,90,54,0.22)] transition hover:bg-primary-hover active:scale-[0.99]"
+              disabled={isSubmitting}
+              className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 text-sm font-bold text-white shadow-[0_8px_18px_rgba(255,90,54,0.22)] transition hover:bg-primary-hover active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
             >
               {isLogin ? "Sign in" : "Create account"}
               <ArrowRight className="size-4" aria-hidden="true" />
             </button>
+            {isSubmitting && (
+              <p className="text-center text-sm text-muted" role="status">
+                {isLogin ? "Signing you in…" : "Creating your account…"}
+              </p>
+            )}
             {message && (
               <p
                 className="rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-800"
@@ -190,7 +246,11 @@ export default function LoginAndRegister() {
         <div className="absolute inset-0 bg-gradient-to-t from-[#27130c]/90 via-[#27130c]/20 to-[#27130c]/15" />
         <div className="absolute left-4 top-4 sm:left-8 sm:top-8 flex items-center gap-2 rounded-full border border-white/25 bg-black/30 px-3 py-1.5 text-xs sm:text-sm font-medium text-white backdrop-blur-md">
           <span className="flex size-5 sm:size-6 items-center justify-center rounded-full bg-emerald-400 text-emerald-950">
-            <Check className="size-3 sm:size-3.5" strokeWidth={3} aria-hidden="true" />
+            <Check
+              className="size-3 sm:size-3.5"
+              strokeWidth={3}
+              aria-hidden="true"
+            />
           </span>
           Your table, delivered
         </div>
@@ -212,12 +272,22 @@ export default function LoginAndRegister() {
           </p>
           <div className="mt-4 sm:mt-8 flex flex-row flex-wrap gap-2 sm:gap-3">
             <div className="flex items-center gap-2 rounded-xl border border-white/20 bg-white/10 px-3 py-2 sm:px-3.5 sm:py-3 backdrop-blur-md">
-              <Truck className="size-3.5 sm:size-4 text-orange-200" aria-hidden="true" />
-              <span className="text-[11px] sm:text-xs font-semibold">Fast delivery</span>
+              <Truck
+                className="size-3.5 sm:size-4 text-orange-200"
+                aria-hidden="true"
+              />
+              <span className="text-[11px] sm:text-xs font-semibold">
+                Fast delivery
+              </span>
             </div>
             <div className="flex items-center gap-2 rounded-xl border border-white/20 bg-white/10 px-3 py-2 sm:px-3.5 sm:py-3 backdrop-blur-md">
-              <Clock3 className="size-3.5 sm:size-4 text-orange-200" aria-hidden="true" />
-              <span className="text-[11px] sm:text-xs font-semibold">Track every order</span>
+              <Clock3
+                className="size-3.5 sm:size-4 text-orange-200"
+                aria-hidden="true"
+              />
+              <span className="text-[11px] sm:text-xs font-semibold">
+                Track every order
+              </span>
             </div>
           </div>
         </div>

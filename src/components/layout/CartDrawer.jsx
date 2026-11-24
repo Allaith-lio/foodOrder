@@ -160,9 +160,9 @@ export default function CartDrawer() {
                   className="flex gap-3 border-b border-line py-4 last:border-0"
                 >
                   <div className="size-20 shrink-0 overflow-hidden rounded-control bg-page">
-                    {item.image ? (
+                    {item.image || item.img ? (
                       <FoodImage
-                        src={item.image}
+                        src={item.image || item.img}
                         alt={item.name}
                         className="size-full"
                       />
@@ -253,7 +253,7 @@ export default function CartDrawer() {
             </p>
 
             <Link
-              to="/checkout"
+              to="/myOrders"
               onClick={closeCart}
               className="btn btn-primary mt-4 w-full no-underline"
             >
